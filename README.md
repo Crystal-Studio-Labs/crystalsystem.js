@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/crystalsystem.js">
-    <img src="https://nodei.co/npm/crystalsystem.js.png?downloads=true&downloadRank=true&stars=true" />
+  <a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js">
+    <img src="https://nodei.co/npm/%40crystal-studio-labs%2Fcrystalsystem.js.png?downloads=true&downloadRank=true&stars=true" />
   </a>
 </p>
 
