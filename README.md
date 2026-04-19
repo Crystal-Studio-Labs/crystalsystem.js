@@ -9,19 +9,21 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/crystalsystem.js">
-  <img src="https://img.shields.io/badge/npm%20install-crystalsystem.js-red?style=for-the-badge&logo=npm" />
-</a>
-  <a href="https://www.npmjs.com/package/crystalsystem.js">
-  <img src="https://img.shields.io/npm/v/crystalsystem.js?style=for-the-badge&color=red&logo=npm" />
-</a>
-  <a href="https://www.npmjs.com/package/crystalsystem.js">
-  <img src="https://img.shields.io/npm/dt/crystalsystem.js?style=for-the-badge&color=red&logo=npm" />
-</a>
-  <a href="https://www.npmjs.com/package/crystalsystem.js"><img src="https://img.shields.io/npm/l/crystalsystem.js?style=for-the-badge&color=red" />
-</a>
-  <a href="https://discord.gg/EdbUJHNv9J"><img src="https://img.shields.io/badge/Discord-Support-5865F2?style=for-the-badge&logo=discord" />
-</a>
+  <a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js">
+    <img src="https://img.shields.io/badge/npm%20install-@crystal--studio--labs%2Fcrystalsystem.js-red?style=for-the-badge&logo=npm" />
+  </a>
+  <a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js">
+    <img src="https://img.shields.io/npm/v/@crystal-studio-labs/crystalsystem.js?style=for-the-badge&color=red&logo=npm" />
+  </a>
+  <a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js">
+    <img src="https://img.shields.io/npm/dt/@crystal-studio-labs/crystalsystem.js?style=for-the-badge&color=red&logo=npm" />
+  </a>
+  <a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js">
+    <img src="https://img.shields.io/npm/l/@crystal-studio-labs/crystalsystem.js?style=for-the-badge&color=red" />
+  </a>
+  <a href="https://discord.gg/EdbUJHNv9J">
+    <img src="https://img.shields.io/badge/Discord-Support-5865F2?style=for-the-badge&logo=discord" />
+  </a>
 </p>
 
 <p align="center">
