@@ -449,6 +449,15 @@ Yes. It falls back to `/proc/cpuinfo` when Android restricts `os.cpus()`, so CPU
 Yes — use `cs.on('data', fn)` to receive every update and do whatever you want with it: send to a database, post to a webhook, broadcast over a WebSocket, etc.
 
 ---
+## 🗨 Join Discord
+
+<p align="center">
+  <a href="https://discord.gg/EdbUJHNv9J">
+    <img src="https://discordapp.com/api/guilds/1075092446880485376/widget.png?style=banner3" width="90%" />
+  </a>
+</p>
+
+---
 
 ## 📄 License
 
