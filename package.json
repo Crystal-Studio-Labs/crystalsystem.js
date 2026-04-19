@@ -1,0 +1,60 @@
+{
+  "name": "@crystal-studio-labs/crystalsystem.js",
+  "version": "1.0.0",
+  "description": "Real-time system resource monitor for Node.js with alerts, HTTP API, CLI, and zero dependencies.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "crystalsystem": "./cli.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "system",
+    "monitor",
+    "stats",
+    "cpu",
+    "memory",
+    "disk",
+    "network",
+    "battery",
+    "gpu",
+    "sparkline",
+    "alert",
+    "http",
+    "api",
+    "cli",
+    "real-time",
+    "cross-platform",
+    "typescript",
+    "termux",
+    "android",
+    "linux",
+    "event-emitter",
+    "logger"
+  ],
+  "author": {
+    "name": "SahooShuvranshu",
+    "url": "https://github.com/SahooShuvranshu"
+  },
+  "organization": {
+    "name": "Crystal Studio Labs",
+    "url": "https://github.com/Crystal-Studio-Labs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Crystal-Studio-Labs/crystalsystem.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Crystal-Studio-Labs/crystalsystem.js/issues"
+  },
+  "homepage": "https://github.com/Crystal-Studio-Labs/crystalsystem.js#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {}
+}
+
