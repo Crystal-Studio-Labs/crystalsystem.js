@@ -1,6 +1,6 @@
 {
   "name": "@crystal-studio-labs/crystalsystem.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Real-time system resource monitor for Node.js with alerts, HTTP API, CLI, and zero dependencies.",
   "main": "index.js",
   "types": "index.d.ts",
