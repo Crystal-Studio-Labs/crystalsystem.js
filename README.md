@@ -37,10 +37,17 @@
 
 ---
 
+<p align="center">
+  <img height="28" src="https://count.getloli.com/@CrystalSystemJs?name=CrystalSystemJs&theme=3d-num&padding=7&offset=0&align=center&scale=1&pixelated=1&darkmode=1" /><br/>
+  <sub><b>🚀 Total Visitors | 👀 Repo Traffic</b></sub>
+</p>
+
+---
+
 ## 📦 Installation
 
 ```sh
-npm install crystalsystem.js
+npm install @crystal-studio-labs/crystalsystem.js
 ```
 
 That's it. No external packages are installed — it uses only Node.js built-ins.
@@ -52,7 +59,7 @@ That's it. No external packages are installed — it uses only Node.js built-ins
 Drop this into any Node.js file and run it:
 
 ```js
-const { crystalsystem } = require('crystalsystem.js');
+const { crystalsystem } = require('@crystal-studio-labs/crystalsystem.js');
 
 crystalsystem();
 ```
@@ -65,7 +72,7 @@ Your terminal will show a live dashboard that refreshes every 5 seconds.
 
 ```
 ════════════════════════════════════════════════════════════
-█   CRYSTAL SYSTEM.JS v1.0.0     SYSTEM INFORMATION    █
+█   CRYSTAL SYSTEM.JS v1.0.2     SYSTEM INFORMATION    █
 ════════════════════════════════════════════════════════════
 
 ┌─ PLATFORM ─────────────────────────────────────────────┐
@@ -102,7 +109,7 @@ Your terminal will show a live dashboard that refreshes every 5 seconds.
 You can customize everything by passing an options object:
 
 ```js
-const { crystalsystem } = require('crystalsystem.js');
+const { crystalsystem } = require('@crystal-studio-labs/crystalsystem.js');
 
 crystalsystem({
   interval:      5000,   // How often to refresh in milliseconds (default: 5000)
@@ -137,7 +144,7 @@ crystalsystem({
 Get notified automatically when your system is under pressure:
 
 ```js
-const { CrystalSystem } = require('crystalsystem.js');
+const { CrystalSystem } = require('@crystal-studio-labs/crystalsystem.js');
 
 const cs = new CrystalSystem({
   interval: 3000,
@@ -164,7 +171,7 @@ cs.start();
 Listen to every tick of data — useful for building your own integrations:
 
 ```js
-const { CrystalSystem } = require('crystalsystem.js');
+const { CrystalSystem } = require('@crystal-studio-labs/crystalsystem.js');
 
 const cs = new CrystalSystem({ interval: 2000 });
 
@@ -190,7 +197,7 @@ The `stats` object contains everything — platform, CPU, memory, network, disk,
 Start a live JSON API that any browser, app, or tool can query:
 
 ```js
-const { crystalsystem } = require('crystalsystem.js');
+const { crystalsystem } = require('@crystal-studio-labs/crystalsystem.js');
 
 crystalsystem({ httpPort: 3001 });
 ```
@@ -216,7 +223,7 @@ Every response is JSON. Great for wiring into Grafana, Discord bots, web dashboa
 Save a history of your system stats to a file automatically:
 
 ```js
-const { crystalsystem } = require('crystalsystem.js');
+const { crystalsystem } = require('@crystal-studio-labs/crystalsystem.js');
 
 crystalsystem({
   logFile:  'stats.json',
@@ -227,7 +234,7 @@ crystalsystem({
 Or write and read logs manually:
 
 ```js
-const { createLogger, getAllStats } = require('crystalsystem.js');
+const { createLogger, getAllStats } = require('@crystal-studio-labs/crystalsystem.js');
 
 const logger = createLogger('stats.json');
 
@@ -262,7 +269,7 @@ const {
   getTopProcesses,
   getAllStats,
   formatBytes,
-} = require('crystalsystem.js');
+} = require('@crystal-studio-labs/crystalsystem.js');
 
 // CPU
 const cpu = getCPUInfo();
@@ -302,7 +309,7 @@ console.log(formatBytes(1_073_741_824)); // "1 GB"
 Install globally to get the `crystalsystem` command:
 
 ```sh
-npm install -g crystalsystem.js
+npm install -g @crystal-studio-labs/crystalsystem.js
 ```
 
 Then run it anywhere:
@@ -362,7 +369,7 @@ import crystalsystem, {
   AlertEvent,
   CPUInfo,
   MemoryInfo,
-} from 'crystalsystem.js';
+} from '@crystal-studio-labs/crystalsystem.js';
 
 const options: CrystalSystemOptions = {
   interval: 3000,
@@ -455,7 +462,7 @@ Yes — use `cs.on('data', fn)` to receive every update and do whatever you want
 
 <p align="center">
   <a href="https://discord.gg/EdbUJHNv9J">
-    <img src="https://discordapp.com/api/guilds/1075092446880485376/widget.png?style=banner3" width="90%" />
+    <img src="https://discordapp.com/api/guilds/1075092446880485376/widget.png?style=banner2" width="90%" />
   </a>
 </p>
 
@@ -466,6 +473,6 @@ Yes — use `cs.on('data', fn)` to receive every update and do whatever you want
 [MIT](./LICENSE) — © Crystal Studio Labs · SahooShuvranshu
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=260&section=footer&color=ff0000" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=180&section=footer&color=ff0000" />
 </p>
 

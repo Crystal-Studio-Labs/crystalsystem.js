@@ -1,4 +1,4 @@
-// Type definitions for crystalsystem.js v1.0.0 — Epic Edition
+// Type definitions for crystalsystem.js v1.0.2
 // Crystal Studio Labs | Author: SahooShuvranshu
 // https://github.com/Crystal-Studio-Labs/crystalsystem.js
 

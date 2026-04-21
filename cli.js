@@ -36,7 +36,7 @@ function parseArgs(argv) {
 }
 
 const HELP = `
-  \x1b[1m\x1b[36mCrystal System.JS v1.0.0\x1b[0m — System Monitor CLI
+  \x1b[1m\x1b[36mCrystal System.JS v1.0.2\x1b[0m — System Monitor CLI
   \x1b[2mCrystal Studio Labs | Author: SahooShuvranshu\x1b[0m
   \x1b[2mhttps://github.com/Crystal-Studio-Labs/crystalsystem.js\x1b[0m
 
