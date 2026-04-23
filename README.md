@@ -72,7 +72,7 @@ Your terminal will show a live dashboard that refreshes every 5 seconds.
 
 ```
 ════════════════════════════════════════════════════════════
-█   CRYSTAL SYSTEM.JS v1.0.2     SYSTEM INFORMATION    █
+█   CRYSTAL SYSTEM.JS v1.0.3     SYSTEM INFORMATION    █
 ════════════════════════════════════════════════════════════
 
 ┌─ PLATFORM ─────────────────────────────────────────────┐
@@ -458,13 +458,24 @@ Yes. It falls back to `/proc/cpuinfo` when Android restricts `os.cpus()`, so CPU
 Yes — use `cs.on('data', fn)` to receive every update and do whatever you want with it: send to a database, post to a webhook, broadcast over a WebSocket, etc.
 
 ---
-## 🗨 Join Discord
+## 💬 Need Help? Join Discordd
 
 <p align="center">
   <a href="https://discord.gg/EdbUJHNv9J">
     <img src="https://discordapp.com/api/guilds/1075092446880485376/widget.png?style=banner2" width="90%" />
   </a>
 </p>
+---
+
+## ⭐️ Star History
+
+<a href="https://www.star-history.com/?repos=Crystal-Studio-Labs%2Fcrystalsystem.js&type=timeline&logscale=&legend=bottom-right">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Crystal-Studio-Labs/crystalsystem.js&type=timeline&theme=dark&logscale&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Crystal-Studio-Labs/crystalsystem.js&type=timeline&logscale&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Crystal-Studio-Labs/crystalsystem.js&type=timeline&logscale&legend=bottom-right" />
+ </picture>
+</a>
 
 ---
 

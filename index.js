@@ -1,5 +1,5 @@
 //=================================================================
-// CRYSTAL SYSTEM.JS v1.0.2
+// CRYSTAL SYSTEM.JS v1.0.3
 // Advanced Cross-Platform System Monitor
 // Developed by Crystal Studio Labs
 // Author: SahooShuvranshu
@@ -424,7 +424,7 @@ function buildSystemTable(options = {}) {
   // ── Header ──
   const border = '═'.repeat(W);
   out += cc(border, 'blue') + '\n';
-  const title = '  CRYSTAL SYSTEM.JS v1.0.2  ';
+  const title = '  CRYSTAL SYSTEM.JS v1.0.3  ';
   const sub   = '  Crystal Studio Labs  ';
   out += cc('█', 'blue') + ' ' + cc(title, 'bgBlue') + cc(sub, 'bgCyan') + ' ' + cc('█', 'blue') + '\n';
   out += cc(border, 'blue') + '\n\n';
@@ -741,7 +741,7 @@ if (require.main === module) {
 }
 
 //=================================================================
-// CRYSTAL SYSTEM.JS v1.0.2
+// CRYSTAL SYSTEM.JS v1.0.3
 // Crystal Studio Labs | Author: SahooShuvranshu
 // https://github.com/Crystal-Studio-Labs/crystalsystem.js
 //=================================================================

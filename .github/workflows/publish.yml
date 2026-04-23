@@ -11,17 +11,26 @@ jobs:
 
     permissions:
       contents: read
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
 
-      - run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Build project (if exists)
+        run: npm run build --if-present
+
+      - name: Verify package contents
+        run: npm pack --dry-run
+
+      - name: Publish to NPM
+        run: npm publish --access public
