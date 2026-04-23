@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
-    "crystalsystem": "./cli.js"
+    "crystalsystem": "cli.js"
   },
   "scripts": {
     "start": "node index.js",
@@ -46,7 +46,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Crystal-Studio-Labs/crystalsystem.js"
+    "url": "git+https://github.com/Crystal-Studio-Labs/crystalsystem.js.git"
   },
   "bugs": {
     "url": "https://github.com/Crystal-Studio-Labs/crystalsystem.js/issues"
@@ -56,8 +56,7 @@
     "node": ">=14.0.0"
   },
   "publishConfig": {
-  "access": "public"
+    "access": "public"
   },
   "dependencies": {}
 }
-
