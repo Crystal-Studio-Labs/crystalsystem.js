@@ -2,1327 +2,1771 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- ── Primary SEO ── -->
   <title>crystalsystem.js — Real-Time System Monitor for Node.js</title>
-  <meta name="description" content="Advanced cross-platform system monitor for Node.js. CPU, Memory, Disk, Network, Battery, GPU. Zero dependencies. Crystal Studio Labs." />
-  <meta property="og:title" content="crystalsystem.js" />
-  <meta property="og:description" content="Real-time system monitor for Node.js. Zero dependencies." />
-  <meta property="og:type" content="website" />
+  <meta name="description" content="Cross-platform system resource monitor for Node.js. Monitor CPU, memory, disk, network, battery and GPU in real-time. Zero dependencies. Event emitter API, HTTP server, alerts, CLI binary and full TypeScript support." />
+  <meta name="keywords" content="crystalsystem, nodejs, system monitor, cpu monitor, memory monitor, npm package, crystal studio labs, SahooShuvranshu, terminal dashboard, real-time, cross-platform" />
+  <meta name="author" content="SahooShuvranshu, Crystal Studio Labs" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#FF2222" />
+  <link rel="canonical" href="https://crystal-studio-labs.github.io/crystalsystem.js/" />
+
+  <!-- ── Open Graph ── -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://crystal-studio-labs.github.io/crystalsystem.js/" />
+  <meta property="og:title"       content="crystalsystem.js — Real-Time System Monitor for Node.js" />
+  <meta property="og:description" content="Monitor CPU, memory, disk, network, battery and GPU in real-time. Zero dependencies. Event emitter API, HTTP server, 12 alert types, CLI and TypeScript support." />
+  <meta property="og:image"       content="https://crystal-studio-labs.github.io/crystalsystem.js/og.png" />
+  <meta property="og:site_name"   content="crystalsystem.js" />
+  <meta property="og:locale"      content="en_US" />
+
+  <!-- ── Twitter Card ── -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="crystalsystem.js — Real-Time System Monitor for Node.js" />
+  <meta name="twitter:description" content="Monitor CPU, memory, disk, network, battery and GPU in real-time. Zero dependencies. Event emitter API, HTTP server, 12 alert types, CLI and TypeScript." />
+  <meta name="twitter:image"       content="https://crystal-studio-labs.github.io/crystalsystem.js/og.png" />
+
+  <!-- ── Favicon (inline SVG → data URI) ── -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23080808'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-family='monospace' fill='%23FF2222'%3E❯%3C/text%3E%3C/svg%3E" />
+  <link rel="alternate icon" href="data:image/png;base64,iVBORw0KGgo=" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23080808'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-family='monospace' fill='%23FF2222'%3E❯%3C/text%3E%3C/svg%3E" />
+
+  <!-- ── JSON-LD Structured Data ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "crystalsystem.js",
+    "version": "1.0.2",
+    "description": "Cross-platform real-time system monitor for Node.js with zero dependencies.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux, macOS, Windows, Android",
+    "url": "https://crystal-studio-labs.github.io/crystalsystem.js/",
+    "downloadUrl": "https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js",
+    "codeRepository": "https://github.com/Crystal-Studio-Labs/crystalsystem.js",
+    "license": "https://opensource.org/licenses/MIT",
+    "author": {
+      "@type": "Person",
+      "name": "SahooShuvranshu",
+      "url": "https://github.com/SahooShuvranshu"
+    },
+    "maintainer": {
+      "@type": "Organization",
+      "name": "Crystal Studio Labs",
+      "url": "https://github.com/Crystal-Studio-Labs"
+    }
+  }
+  </script>
+
+  <!-- ── Fonts ── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
   <style>
-    /* ── Reset & Root ─────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ════════════════════════════════════════════════
+     RESET & TOKENS
+  ════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --red:       #FF2222;
-      --red-dim:   #CC1111;
-      --red-glow:  rgba(255,34,34,0.18);
-      --red-faint: rgba(255,34,34,0.06);
-      --bg:        #080808;
-      --bg1:       #0e0e0e;
-      --bg2:       #131313;
-      --bg3:       #1a1a1a;
-      --line:      rgba(255,255,255,0.06);
-      --line2:     rgba(255,34,34,0.15);
-      --text:      #e8e8e8;
-      --text-dim:  #888;
-      --text-faint:#444;
-      --mono:      'Share Tech Mono', monospace;
-      --display:   'Syne', sans-serif;
-      --body:      'DM Sans', sans-serif;
-    }
+  :root {
+    --red:        #FF2222;
+    --red-mid:    #cc1a1a;
+    --red-glow:   rgba(255,34,34,0.15);
+    --red-faint:  rgba(255,34,34,0.06);
+    --bg:         #070707;
+    --bg1:        #0d0d0d;
+    --bg2:        #121212;
+    --bg3:        #181818;
+    --line:       rgba(255,255,255,0.07);
+    --line-red:   rgba(255,34,34,0.18);
+    --txt:        #e6e6e6;
+    --txt-mid:    #888;
+    --txt-dim:    #444;
+    --mono:       'Share Tech Mono', monospace;
+    --display:    'Syne', sans-serif;
+    --body:       'DM Sans', sans-serif;
+    /* Fluid spacing */
+    --px:         clamp(20px, 5vw, 72px);
+    --section-py: clamp(64px, 8vw, 120px);
+  }
 
-    html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--body);
-      font-size: 16px;
-      line-height: 1.6;
-      overflow-x: hidden;
-      cursor: none;
-    }
+  body {
+    background: var(--bg);
+    color: var(--txt);
+    font-family: var(--body);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
 
-    /* ── Custom Cursor ───────────────────────────────────────── */
-    #cursor {
-      position: fixed;
-      width: 10px; height: 10px;
-      background: var(--red);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width .15s, height .15s, opacity .15s;
-      mix-blend-mode: screen;
-    }
-    #cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border: 1px solid rgba(255,34,34,0.5);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: transform .12s ease-out, width .2s, height .2s;
-    }
+  img, svg { display: block; max-width: 100%; }
 
-    /* ── Noise Overlay ───────────────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1000;
-      opacity: .4;
-    }
+  a { color: inherit; text-decoration: none; }
 
-    /* ── Scanline ────────────────────────────────────────────── */
-    body::after {
-      content: '';
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-      );
-      pointer-events: none;
-      z-index: 999;
-    }
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9000;
+    pointer-events: none;
+    opacity: .25;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+  }
 
-    /* ── NAV ─────────────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 500;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 48px;
-      height: 64px;
-      background: rgba(8,8,8,0.92);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--line);
-    }
+  /* Scanlines */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 8999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 3px,
+      rgba(0,0,0,.025) 3px, rgba(0,0,0,.025) 4px
+    );
+  }
 
-    .nav-logo {
-      font-family: var(--mono);
-      font-size: 15px;
-      color: var(--red);
-      letter-spacing: .05em;
-      text-decoration: none;
-    }
-    .nav-logo span { color: var(--text-dim); }
+  /* ════════════════════════════════════════════════
+     UTILITY
+  ════════════════════════════════════════════════ */
+  .container {
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 var(--px);
+  }
 
-    .nav-links {
-      display: flex; gap: 36px;
-      list-style: none;
-    }
-    .nav-links a {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text-dim);
-      text-decoration: none;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      transition: color .2s;
-    }
-    .nav-links a:hover { color: var(--red); }
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .tag::before { content: '▸  '; }
 
-    .nav-cta {
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 8px 20px;
-      background: transparent;
-      border: 1px solid var(--red);
-      color: var(--red);
-      text-decoration: none;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      transition: background .2s, color .2s;
-    }
-    .nav-cta:hover { background: var(--red); color: #000; }
+  h2.section-heading {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -.025em;
+    margin-bottom: 16px;
+  }
 
-    /* ── HERO ────────────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 120px 48px 80px;
-      position: relative;
-      overflow: hidden;
-    }
+  p.section-sub {
+    font-size: clamp(14px, 1.5vw, 17px);
+    color: var(--txt-mid);
+    max-width: 520px;
+    line-height: 1.75;
+  }
 
-    /* Grid background */
-    #hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 100%);
-    }
+  .section-header { margin-bottom: clamp(40px, 5vw, 64px); }
 
-    /* Red glow orb */
-    .hero-glow {
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(255,34,34,0.12) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
+  /* Divider */
+  hr.div { border: none; border-top: 1px solid var(--line); }
 
-    .hero-inner {
-      position: relative;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .65s cubic-bezier(.25,.46,.45,.94),
+                transform .65s cubic-bezier(.25,.46,.45,.94);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-d1 { transition-delay: .1s; }
+  .reveal-d2 { transition-delay: .2s; }
+  .reveal-d3 { transition-delay: .3s; }
+  .reveal-d4 { transition-delay: .4s; }
 
-    .hero-label {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--red);
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp .6s .2s forwards;
-    }
+  /* ════════════════════════════════════════════════
+     NAV
+  ════════════════════════════════════════════════ */
+  #nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    height: 60px;
+    display: flex; align-items: center;
+    background: rgba(7,7,7,.92);
+    backdrop-filter: blur(16px) saturate(1.2);
+    border-bottom: 1px solid var(--line);
+  }
 
-    .hero-title {
-      font-family: var(--display);
-      font-size: clamp(42px, 5vw, 72px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -.02em;
-      margin-bottom: 28px;
-      opacity: 0;
-      animation: fadeUp .6s .35s forwards;
-    }
-    .hero-title .accent { color: var(--red); }
+  .nav-inner {
+    width: 100%; max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 var(--px);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
 
-    .hero-desc {
-      font-size: 17px;
-      color: var(--text-dim);
-      line-height: 1.7;
-      max-width: 480px;
-      margin-bottom: 44px;
-      opacity: 0;
-      animation: fadeUp .6s .5s forwards;
-    }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--red);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-logo span { color: var(--txt-mid); }
 
-    .hero-actions {
-      display: flex; gap: 16px; flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp .6s .65s forwards;
-    }
+  .nav-links {
+    list-style: none;
+    display: flex; gap: clamp(16px, 2.5vw, 32px);
+    flex-wrap: nowrap;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--txt-mid);
+    transition: color .2s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--red); }
 
-    .btn-primary {
-      font-family: var(--mono);
-      font-size: 13px;
-      padding: 14px 32px;
-      background: var(--red);
-      color: #000;
-      text-decoration: none;
-      letter-spacing: .08em;
-      font-weight: 700;
-      transition: background .2s, transform .2s, box-shadow .2s;
-      display: inline-block;
-    }
-    .btn-primary:hover {
-      background: #ff4444;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(255,34,34,0.4);
-    }
+  .nav-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 7px 16px;
+    border: 1px solid var(--red);
+    color: var(--red);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: background .2s, color .2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-btn:hover { background: var(--red); color: #000; }
 
-    .btn-secondary {
-      font-family: var(--mono);
-      font-size: 13px;
-      padding: 14px 32px;
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--text-dim);
-      text-decoration: none;
-      letter-spacing: .08em;
-      transition: border-color .2s, color .2s;
-      display: inline-block;
-    }
-    .btn-secondary:hover { border-color: var(--red); color: var(--red); }
+  /* Hamburger */
+  #nav-toggle {
+    display: none;
+    flex-direction: column; gap: 5px;
+    cursor: pointer; background: none; border: none; padding: 4px;
+  }
+  #nav-toggle span {
+    display: block; width: 22px; height: 1.5px;
+    background: var(--txt);
+    transition: transform .25s, opacity .25s;
+  }
+  #nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  #nav-toggle.open span:nth-child(2) { opacity: 0; }
+  #nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-    /* ── TERMINAL ───────────────────────────────────────────── */
-    .terminal {
-      background: #0a0a0a;
-      border: 1px solid var(--line2);
-      position: relative;
-      opacity: 0;
-      animation: fadeLeft .7s .4s forwards;
-      box-shadow: 0 0 60px rgba(255,34,34,0.08), inset 0 0 60px rgba(0,0,0,0.5);
-    }
+  /* Mobile nav drawer */
+  #nav-drawer {
+    display: none;
+    position: fixed; top: 60px; left: 0; right: 0; z-index: 499;
+    background: var(--bg1);
+    border-bottom: 1px solid var(--line);
+    padding: 20px var(--px) 24px;
+    flex-direction: column; gap: 16px;
+  }
+  #nav-drawer.open { display: flex; }
+  #nav-drawer a {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--txt-mid);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    transition: color .2s;
+  }
+  #nav-drawer a:hover { color: var(--red); }
 
-    .terminal-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 16px;
-      background: #111;
-      border-bottom: 1px solid var(--line);
-    }
-    .terminal-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    .terminal-dot.red    { background: #FF5F57; }
-    .terminal-dot.yellow { background: #FFBD2E; }
-    .terminal-dot.green  { background: #28CA42; }
-    .terminal-title {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-faint);
-      margin-left: auto;
-      letter-spacing: .1em;
-    }
+  /* ════════════════════════════════════════════════
+     HERO
+  ════════════════════════════════════════════════ */
+  #hero {
+    padding-top: 60px; /* nav height */
+    min-height: 100svh;
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
 
-    .terminal-body {
-      padding: 20px;
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.8;
-      height: 420px;
-      overflow: hidden;
-      position: relative;
-    }
+  /* Grid bg */
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 10%, transparent 100%);
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 10%, transparent 100%);
+  }
 
-    .t-line { display: block; white-space: pre; }
-    .t-border { color: #1e4a6e; }
-    .t-header { color: #FF2222; font-weight: bold; }
-    .t-label  { color: #22aaff; }
-    .t-value  { color: #e8e8e8; }
-    .t-green  { color: #22cc66; }
-    .t-yellow { color: #ffcc22; }
-    .t-dim    { color: #444; }
-    .t-spark  { color: #22cc66; }
+  .hero-glow {
+    position: absolute; z-index: 0;
+    width: min(700px, 100vw);
+    height: min(700px, 100vw);
+    background: radial-gradient(circle, rgba(255,34,34,.1) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
 
-    /* Typing animation for terminal lines */
-    .t-line {
-      opacity: 0;
-      transform: translateY(4px);
-      animation: termLine .05s forwards;
-    }
+  .hero-inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1160px;
+    margin: 0 auto;
+    padding: clamp(48px,8vh,96px) var(--px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: center;
+  }
 
-    @keyframes termLine {
-      to { opacity: 1; transform: none; }
-    }
+  /* Hero text */
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: clamp(10px, 1.2vw, 12px);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp .55s .1s forwards;
+  }
 
-    /* Blinking cursor */
-    .t-cursor {
-      display: inline-block;
-      width: 8px; height: 14px;
-      background: var(--red);
-      vertical-align: middle;
-      animation: blink .8s step-end infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(36px, 5.5vw, 76px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -.03em;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp .55s .25s forwards;
+  }
+  .hero-title .red { color: var(--red); }
 
-    /* ── INSTALL BAR ─────────────────────────────────────────── */
-    .install-bar {
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      border-left: 3px solid var(--red);
-      padding: 14px 20px;
-      display: flex; align-items: center; gap: 16px;
-      margin-top: 16px;
-      cursor: pointer;
-      transition: border-color .2s;
-    }
-    .install-bar:hover { border-color: var(--red); }
-    .install-bar code {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--text);
-      flex: 1;
-    }
-    .install-bar code span { color: var(--red); }
-    .copy-btn {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-faint);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      transition: color .2s;
-      white-space: nowrap;
-    }
-    .install-bar:hover .copy-btn { color: var(--red); }
+  .hero-desc {
+    font-size: clamp(14px, 1.5vw, 17px);
+    color: var(--txt-mid);
+    max-width: 460px;
+    line-height: 1.75;
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeUp .55s .4s forwards;
+  }
 
-    /* ── STATS COUNTER ───────────────────────────────────────── */
-    .hero-stats {
-      display: flex; gap: 40px;
-      margin-top: 48px;
-      padding-top: 32px;
-      border-top: 1px solid var(--line);
-      opacity: 0;
-      animation: fadeUp .6s .8s forwards;
-    }
-    .stat-item { }
-    .stat-num {
-      font-family: var(--display);
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--red);
-      display: block;
-    }
-    .stat-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-faint);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
+  .hero-btns {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp .55s .52s forwards;
+  }
 
-    /* ── SECTIONS ────────────────────────────────────────────── */
-    section {
-      padding: 100px 48px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+  .btn-red {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 13px 28px;
+    background: var(--red);
+    color: #000;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: background .2s, transform .2s, box-shadow .2s;
+    display: inline-block;
+  }
+  .btn-red:hover {
+    background: #ff4545;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(255,34,34,.38);
+  }
 
-    .section-label {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--red);
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 12px 28px;
+    border: 1px solid var(--line);
+    color: var(--txt-mid);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: border-color .2s, color .2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--red); color: var(--red); }
 
-    .section-title {
-      font-family: var(--display);
-      font-size: clamp(28px, 3.5vw, 48px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -.02em;
-      margin-bottom: 20px;
-    }
+  /* Install bar */
+  .install-bar {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--red);
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: border-color .2s;
+    opacity: 0;
+    animation: fadeUp .55s .62s forwards;
+    max-width: 480px;
+  }
+  .install-bar:hover { border-color: var(--red); }
+  .install-bar code {
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.3vw, 13px);
+    color: var(--txt);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .install-bar code em { color: var(--red); font-style: normal; }
+  .install-lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt-dim);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    transition: color .2s;
+  }
+  .install-bar:hover .install-lbl { color: var(--red); }
 
-    .section-sub {
-      font-size: 16px;
-      color: var(--text-dim);
-      max-width: 560px;
-      line-height: 1.7;
-    }
+  /* Hero pills */
+  .hero-pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 24px;
+    opacity: 0;
+    animation: fadeUp .55s .72s forwards;
+  }
+  .pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    background: var(--bg3);
+    border: 1px solid var(--line);
+    color: var(--txt-dim);
+  }
+  .pill.red { border-color: var(--line-red); color: var(--red); }
 
-    /* ── FEATURES GRID ───────────────────────────────────────── */
-    #features { border-top: 1px solid var(--line); }
+  /* ── TERMINAL ── */
+  .hero-terminal {
+    opacity: 0;
+    animation: fadeLeft .65s .35s forwards;
+  }
 
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1px;
-      margin-top: 64px;
-      background: var(--line);
-      border: 1px solid var(--line);
-    }
+  .term-window {
+    background: #080808;
+    border: 1px solid var(--line-red);
+    box-shadow: 0 0 80px rgba(255,34,34,.07), 0 24px 64px rgba(0,0,0,.6);
+    overflow: hidden;
+  }
 
-    .feature-card {
-      background: var(--bg);
-      padding: 36px 32px;
-      transition: background .25s;
-      position: relative;
-      overflow: hidden;
-    }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--red);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform .3s;
-    }
-    .feature-card:hover { background: var(--bg2); }
-    .feature-card:hover::before { transform: scaleX(1); }
+  .term-bar {
+    display: flex; align-items: center; gap: 7px;
+    padding: 10px 14px;
+    background: #0f0f0f;
+    border-bottom: 1px solid var(--line);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot.r { background: #FF5F57; }
+  .dot.y { background: #FFBD2E; }
+  .dot.g { background: #28CA42; }
+  .term-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt-dim);
+    margin-left: auto;
+    letter-spacing: .1em;
+  }
 
-    .feature-icon {
-      font-size: 28px;
-      margin-bottom: 20px;
-      display: block;
-    }
-    .feature-name {
-      font-family: var(--display);
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -.01em;
-    }
-    .feature-desc {
-      font-size: 14px;
-      color: var(--text-dim);
-      line-height: 1.6;
-    }
+  .term-body {
+    padding: clamp(14px, 2vw, 22px);
+    font-family: var(--mono);
+    font-size: clamp(9.5px, 1.1vw, 12px);
+    line-height: 1.75;
+    height: clamp(340px, 42vw, 460px);
+    overflow: hidden;
+  }
 
-    /* ── CODE SECTION ────────────────────────────────────────── */
-    #usage { border-top: 1px solid var(--line); }
+  .tl { display: block; white-space: pre; opacity: 0; animation: tline .04s forwards; }
+  @keyframes tline { to { opacity: 1; } }
 
-    .code-tabs {
-      display: flex; gap: 0;
-      margin-top: 56px;
-      border-bottom: 1px solid var(--line);
-    }
-    .code-tab {
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 12px 24px;
-      color: var(--text-faint);
-      cursor: pointer;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      border: none;
-      background: transparent;
-      border-bottom: 2px solid transparent;
-      transition: color .2s, border-color .2s;
-      margin-bottom: -1px;
-    }
-    .code-tab.active { color: var(--red); border-bottom-color: var(--red); }
-    .code-tab:hover  { color: var(--text); }
+  .tc-red  { color: #FF2222; }
+  .tc-blue { color: #22aaff; }
+  .tc-grn  { color: #22cc66; }
+  .tc-ylw  { color: #ffcc22; }
+  .tc-dim  { color: #383838; }
+  .tc-wht  { color: #cccccc; }
+  .tc-mgn  { color: #cc66ff; }
 
-    .code-panel {
-      display: none;
-      background: #0a0a0a;
-      border: 1px solid var(--line);
-      border-top: none;
-      position: relative;
-    }
-    .code-panel.active { display: block; }
+  .t-caret {
+    display: inline-block;
+    width: 7px; height: 13px;
+    background: var(--red);
+    vertical-align: middle;
+    animation: blink .85s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    .code-panel pre {
-      padding: 28px 32px;
-      font-family: var(--mono);
-      font-size: 13px;
-      line-height: 1.8;
-      overflow-x: auto;
-      color: #ccc;
-    }
+  /* ════════════════════════════════════════════════
+     BADGE ROW
+  ════════════════════════════════════════════════ */
+  #badges {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg1);
+    overflow: hidden;
+  }
 
-    /* Syntax colors */
-    .kw  { color: #FF2222; }
-    .fn  { color: #66d9ff; }
-    .str { color: #a8ff60; }
-    .cm  { color: #555; font-style: italic; }
-    .num { color: #ffcc22; }
-    .prop{ color: #ffaa44; }
+  .badge-track {
+    display: flex; gap: 0;
+    animation: scroll 22s linear infinite;
+    width: max-content;
+  }
+  .badge-track:hover { animation-play-state: paused; }
 
-    .copy-code-btn {
-      position: absolute;
-      top: 12px; right: 16px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-faint);
-      background: transparent;
-      border: 1px solid var(--line);
-      padding: 6px 12px;
-      cursor: pointer;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      transition: all .2s;
-    }
-    .copy-code-btn:hover { border-color: var(--red); color: var(--red); }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
 
-    /* ── ALERTS SHOWCASE ─────────────────────────────────────── */
-    #alerts { border-top: 1px solid var(--line); }
+  .badge-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 32px;
+    border-right: 1px solid var(--line);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-icon { font-size: 16px; }
+  .badge-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--txt-dim);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
 
-    .alerts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      margin-top: 56px;
-    }
+  /* ════════════════════════════════════════════════
+     FEATURES
+  ════════════════════════════════════════════════ */
+  #features {
+    padding: var(--section-py) 0;
+    border-top: 1px solid var(--line);
+  }
 
-    .alert-card {
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      padding: 24px 20px;
-      transition: border-color .2s, transform .2s;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .alert-card:hover {
-      border-color: var(--red);
-      transform: translateY(-3px);
-    }
-    .alert-card-icon { font-size: 24px; margin-bottom: 12px; display: block; }
-    .alert-card-name {
-      font-family: var(--display);
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .alert-card-desc {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-faint);
-    }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
 
-    /* ── API TABLE ───────────────────────────────────────────── */
-    #api { border-top: 1px solid var(--line); }
+  .feat-card {
+    background: var(--bg);
+    padding: clamp(24px, 3vw, 40px);
+    position: relative;
+    overflow: hidden;
+    transition: background .2s;
+  }
+  .feat-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s;
+  }
+  .feat-card:hover { background: var(--bg2); }
+  .feat-card:hover::after { transform: scaleX(1); }
 
-    .api-table-wrap { overflow-x: auto; margin-top: 48px; }
+  .feat-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt-dim);
+    letter-spacing: .2em;
+    margin-bottom: 20px;
+  }
+  .feat-icon { font-size: clamp(22px, 2.5vw, 30px); margin-bottom: 16px; display: block; }
+  .feat-name {
+    font-family: var(--display);
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -.01em;
+  }
+  .feat-desc {
+    font-size: clamp(12px, 1.3vw, 14px);
+    color: var(--txt-mid);
+    line-height: 1.65;
+  }
+  .feat-desc code {
+    font-family: var(--mono);
+    font-size: .9em;
+    color: var(--red);
+    background: var(--red-faint);
+    padding: 1px 5px;
+  }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    thead tr {
-      background: var(--bg2);
-      border-bottom: 1px solid var(--line2);
-    }
-    thead th {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      padding: 14px 20px;
-      text-align: left;
-    }
-    tbody tr {
-      border-bottom: 1px solid var(--line);
-      transition: background .15s;
-    }
-    tbody tr:hover { background: var(--bg2); }
-    tbody td { padding: 14px 20px; color: var(--text-dim); line-height: 1.5; }
-    tbody td:first-child {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--red);
-    }
-    tbody td code {
-      font-family: var(--mono);
-      font-size: 11px;
-      background: var(--bg3);
-      padding: 2px 6px;
-      color: #aaa;
-    }
+  /* ════════════════════════════════════════════════
+     USAGE / CODE
+  ════════════════════════════════════════════════ */
+  #usage {
+    padding: var(--section-py) 0;
+    border-top: 1px solid var(--line);
+  }
 
-    /* ── PLATFORM GRID ───────────────────────────────────────── */
-    #platforms { border-top: 1px solid var(--line); }
+  .tabs-row {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-row::-webkit-scrollbar { display: none; }
 
-    .platform-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-top: 56px;
-    }
+  .tab-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 12px 20px;
+    color: var(--txt-dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab-btn.on { color: var(--red); border-bottom-color: var(--red); }
+  .tab-btn:hover:not(.on) { color: var(--txt); }
 
-    .platform-card {
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      padding: 28px 20px;
-      text-align: center;
-    }
-    .platform-icon { font-size: 32px; margin-bottom: 12px; display: block; }
-    .platform-name {
-      font-family: var(--display);
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .platform-features {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .pf {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-faint);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .pf.yes::before { content: '✓'; color: #22cc66; }
-    .pf.no::before  { content: '✗'; color: #555; }
+  .tab-panel { display: none; }
+  .tab-panel.on { display: block; }
 
-    /* ── FOOTER ──────────────────────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 24px;
-      max-width: 100%;
-    }
+  .code-box {
+    background: #080808;
+    border: 1px solid var(--line);
+    border-top: none;
+    position: relative;
+  }
 
-    .footer-brand {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-    .footer-brand strong { color: var(--red); }
+  .code-box pre {
+    padding: clamp(20px, 3vw, 32px);
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.2vw, 13px);
+    line-height: 1.8;
+    overflow-x: auto;
+    color: #bbb;
+    tab-size: 2;
+  }
 
-    .footer-links {
-      display: flex; gap: 28px;
-      list-style: none;
-    }
-    .footer-links a {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-faint);
-      text-decoration: none;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      transition: color .2s;
-    }
-    .footer-links a:hover { color: var(--red); }
+  /* Syntax */
+  .kw  { color: #FF2222; }
+  .fn  { color: #66ccff; }
+  .st  { color: #88dd55; }
+  .cm  { color: #484848; font-style: italic; }
+  .nm  { color: #ffcc22; }
+  .pr  { color: #ffaa44; }
+  .op  { color: #cc66ff; }
 
-    /* ── SCROLL REVEAL ───────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
+  .copy-btn2 {
+    position: absolute; top: 10px; right: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 5px 12px;
+    color: var(--txt-dim);
+    background: var(--bg3);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: color .2s, border-color .2s;
+  }
+  .copy-btn2:hover { color: var(--red); border-color: var(--red); }
 
-    /* ── ANIMATIONS ──────────────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: none; }
-    }
-    @keyframes fadeLeft {
-      from { opacity: 0; transform: translateX(30px); }
-      to   { opacity: 1; transform: none; }
-    }
+  /* ════════════════════════════════════════════════
+     DOCUMENTATION
+  ════════════════════════════════════════════════ */
+  #docs {
+    padding: var(--section-py) 0;
+    border-top: 1px solid var(--line);
+  }
 
-    /* ── MOBILE ──────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 0 24px; }
-      .nav-links { display: none; }
-      #hero { padding: 100px 24px 60px; }
-      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      section { padding: 72px 24px; }
-      footer { padding: 36px 24px; }
-      body { cursor: auto; }
-      #cursor, #cursor-ring { display: none; }
-    }
+  .docs-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: clamp(32px, 4vw, 64px);
+    align-items: start;
+  }
+
+  /* Sticky sidebar */
+  .docs-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .docs-nav-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--txt-dim);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .docs-nav-list { list-style: none; }
+  .docs-nav-list li + li { margin-top: 2px; }
+  .docs-nav-list a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--txt-mid);
+    display: block;
+    padding: 6px 10px;
+    border-left: 2px solid transparent;
+    transition: color .2s, border-color .2s, background .2s;
+    letter-spacing: .03em;
+  }
+  .docs-nav-list a:hover,
+  .docs-nav-list a.active {
+    color: var(--red);
+    border-left-color: var(--red);
+    background: var(--red-faint);
+  }
+
+  /* Doc content */
+  .docs-content { min-width: 0; }
+
+  .doc-section { margin-bottom: 56px; scroll-margin-top: 80px; }
+
+  .doc-section h3 {
+    font-family: var(--display);
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .doc-section h3 .anchor {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--txt-dim);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .doc-section h3:hover .anchor { opacity: 1; }
+
+  .doc-section p {
+    font-size: clamp(13px, 1.4vw, 15px);
+    color: var(--txt-mid);
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  .doc-section p code,
+  .doc-section li code {
+    font-family: var(--mono);
+    font-size: .88em;
+    color: var(--red);
+    background: var(--red-faint);
+    padding: 2px 6px;
+    border: 1px solid var(--line-red);
+  }
+
+  .doc-section ul, .doc-section ol {
+    padding-left: 20px;
+    color: var(--txt-mid);
+    font-size: clamp(13px, 1.4vw, 15px);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .doc-section li { margin-bottom: 4px; }
+
+  /* Doc mini code block */
+  .doc-code {
+    background: #080808;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--red);
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.2vw, 12.5px);
+    line-height: 1.8;
+    overflow-x: auto;
+    color: #bbb;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .doc-code .kw  { color: #FF2222; }
+  .doc-code .fn  { color: #66ccff; }
+  .doc-code .st  { color: #88dd55; }
+  .doc-code .cm  { color: #484848; font-style: italic; }
+  .doc-code .nm  { color: #ffcc22; }
+  .doc-code .pr  { color: #ffaa44; }
+
+  /* Options table inside docs */
+  .opt-table { width: 100%; border-collapse: collapse; font-size: clamp(11px, 1.2vw, 13px); margin-bottom: 24px; }
+  .opt-table th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--txt-dim);
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--line-red);
+  }
+  .opt-table td {
+    padding: 10px 14px;
+    color: var(--txt-mid);
+    border-bottom: 1px solid var(--line);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  .opt-table td:first-child { font-family: var(--mono); color: var(--red); font-size: .92em; }
+  .opt-table td:nth-child(2) { font-family: var(--mono); color: #88cc44; font-size: .9em; }
+  .opt-table td:nth-child(3) { font-family: var(--mono); color: var(--txt-dim); font-size: .9em; }
+  .opt-table tr:hover td { background: var(--bg2); }
+
+  /* ════════════════════════════════════════════════
+     ALERTS
+  ════════════════════════════════════════════════ */
+  #alerts {
+    padding: var(--section-py) 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .alerts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .alert-card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    padding: clamp(18px, 2.5vw, 28px) clamp(16px, 2vw, 22px);
+    transition: border-color .2s, transform .2s, background .2s;
+    display: block;
+  }
+  .alert-card:hover {
+    border-color: var(--red);
+    transform: translateY(-3px);
+    background: var(--bg3);
+  }
+  .alert-icon { font-size: clamp(20px, 2.5vw, 26px); margin-bottom: 10px; display: block; }
+  .alert-name {
+    font-family: var(--display);
+    font-size: clamp(13px, 1.4vw, 15px);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .alert-desc {
+    font-family: var(--mono);
+    font-size: clamp(9px, 1vw, 11px);
+    color: var(--txt-dim);
+    letter-spacing: .04em;
+  }
+
+  /* ════════════════════════════════════════════════
+     PLATFORMS
+  ════════════════════════════════════════════════ */
+  #platforms {
+    padding: var(--section-py) 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  .plat-card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    padding: clamp(20px, 3vw, 32px) clamp(14px, 2vw, 20px);
+    text-align: center;
+    transition: border-color .2s;
+  }
+  .plat-card:hover { border-color: var(--line-red); }
+
+  .plat-icon { font-size: clamp(24px, 3vw, 36px); margin-bottom: 10px; display: block; }
+  .plat-name {
+    font-family: var(--display);
+    font-size: clamp(12px, 1.3vw, 15px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .plat-feats { display: flex; flex-direction: column; gap: 4px; }
+  .pf {
+    font-family: var(--mono);
+    font-size: clamp(9px, 1vw, 10px);
+    color: var(--txt-dim);
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .pf::before { flex-shrink: 0; }
+  .pf.y::before { content: '✓'; color: #22cc66; }
+  .pf.n::before { content: '✗'; color: #3a3a3a; }
+
+  /* ════════════════════════════════════════════════
+     FOOTER
+  ════════════════════════════════════════════════ */
+  #footer {
+    border-top: 1px solid var(--line);
+    padding: clamp(40px, 5vw, 64px) 0;
+  }
+
+  .footer-inner {
+    display: flex; flex-wrap: wrap;
+    gap: clamp(32px, 4vw, 64px);
+    justify-content: space-between;
+  }
+
+  .footer-brand .logo {
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--txt-dim);
+    line-height: 1.65;
+    max-width: 280px;
+  }
+
+  .footer-col h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--txt-dim);
+    margin-bottom: 14px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li + li { margin-top: 8px; }
+  .footer-col a {
+    font-size: 13px;
+    color: var(--txt-mid);
+    transition: color .2s;
+  }
+  .footer-col a:hover { color: var(--red); }
+
+  .footer-bottom {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 12px;
+    justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--txt-dim);
+    letter-spacing: .05em;
+  }
+
+  /* ════════════════════════════════════════════════
+     ANIMATIONS
+  ════════════════════════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(28px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ════════════════════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════════════════════ */
+
+  /* ── Tablet ≤ 960px ── */
+  @media (max-width: 960px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-terminal { order: -1; max-width: 560px; margin: 0 auto; width: 100%; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .alerts-grid { grid-template-columns: repeat(3, 1fr); }
+    .platform-grid { grid-template-columns: repeat(3, 1fr); }
+    .docs-layout { grid-template-columns: 1fr; }
+    .docs-sidebar { display: none; }
+    .nav-links { display: none; }
+    #nav-toggle { display: flex; }
+    .footer-inner { flex-direction: column; }
+  }
+
+  /* ── Mobile ≤ 600px ── */
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .alerts-grid { grid-template-columns: repeat(2, 1fr); }
+    .platform-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-btns { flex-direction: column; }
+    .btn-red, .btn-ghost { text-align: center; }
+    .tabs-row { gap: 0; }
+    .tab-btn { padding: 10px 14px; font-size: 10px; }
+  }
+
+  /* ── Small Mobile ≤ 380px ── */
+  @media (max-width: 380px) {
+    .alerts-grid { grid-template-columns: 1fr; }
+    .platform-grid { grid-template-columns: 1fr 1fr; }
+  }
   </style>
 </head>
 <body>
 
-<!-- Custom cursor -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#"><span>❯ </span>crystalsystem.js</a>
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#alerts">Alerts</a></li>
-    <li><a href="#api">API</a></li>
-    <li><a href="#platforms">Platforms</a></li>
-  </ul>
-  <a class="nav-cta" href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js" target="_blank">npm install</a>
+<!-- ════════════════════════════════════════════════
+     NAV
+════════════════════════════════════════════════ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#"><span>❯ </span>crystalsystem.js</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#usage">Usage</a></li>
+      <li><a href="#docs">Docs</a></li>
+      <li><a href="#alerts">Alerts</a></li>
+      <li><a href="#platforms">Platforms</a></li>
+    </ul>
+    <a class="nav-btn" href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js" target="_blank">npm ↗</a>
+    <button id="nav-toggle" aria-label="Toggle menu" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
-<!-- HERO -->
-<div id="hero">
-  <div class="hero-glow"></div>
+<!-- Mobile drawer -->
+<div id="nav-drawer">
+  <a href="#features" onclick="closeNav()">Features</a>
+  <a href="#usage"    onclick="closeNav()">Usage</a>
+  <a href="#docs"     onclick="closeNav()">Docs</a>
+  <a href="#alerts"   onclick="closeNav()">Alerts</a>
+  <a href="#platforms" onclick="closeNav()">Platforms</a>
+  <a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js" target="_blank">GitHub ↗</a>
+  <a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js" target="_blank">npm ↗</a>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
+<section id="hero" aria-label="Hero">
+  <div class="hero-glow" aria-hidden="true"></div>
   <div class="hero-inner">
-    <div class="hero-left">
-      <p class="hero-label">▸ Crystal Studio Labs · v1.0.0</p>
+
+    <!-- Text -->
+    <div class="hero-text">
+      <p class="hero-eyebrow">Crystal Studio Labs · v1.0.2</p>
       <h1 class="hero-title">
         Real-Time<br/>
-        System <span class="accent">Monitor</span><br/>
+        System <span class="red">Monitor</span><br/>
         for Node.js
       </h1>
       <p class="hero-desc">
-        CPU, memory, disk, network, battery, GPU — all in one live terminal dashboard.
-        Event emitter API, HTTP server, alerts, logging, CLI. Zero dependencies.
+        CPU, memory, disk, network, battery, GPU — live terminal dashboard with sparklines,
+        threshold alerts, HTTP API, file logging, CLI binary and full TypeScript support.
+        Zero external dependencies.
       </p>
-      <div class="hero-actions">
-        <a class="btn-primary" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js" target="_blank">View on GitHub</a>
-        <a class="btn-secondary" href="#usage">See Examples</a>
+      <div class="hero-btns">
+        <a class="btn-red"   href="https://github.com/Crystal-Studio-Labs/crystalsystem.js" target="_blank">View on GitHub</a>
+        <a class="btn-ghost" href="#docs">Read the Docs</a>
+        <a class="btn-ghost" href="#usage">See Examples</a>
       </div>
-
-      <div
-        class="install-bar"
-        onclick="copyInstall(this)"
-        title="Click to copy"
-      >
-        <code><span>$</span> npm install @crystal-studio-labs/crystalsystem.js</code>
-        <span class="copy-btn" id="copy-install-label">copy</span>
+      <div class="install-bar" onclick="copyInstall(this)" title="Click to copy">
+        <code><em>$</em> npm install @crystal-studio-labs/crystalsystem.js</code>
+        <span class="install-lbl" id="ilbl">copy</span>
       </div>
-
-      <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-num">0</span>
-          <span class="stat-label">Dependencies</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">12</span>
-          <span class="stat-label">Alert Types</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">5</span>
-          <span class="stat-label">Platforms</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">Node 14+</span>
-          <span class="stat-label">Required</span>
-        </div>
+      <div class="hero-pills">
+        <span class="pill red">v1.0.2</span>
+        <span class="pill">MIT</span>
+        <span class="pill">0 deps</span>
+        <span class="pill">Node 14+</span>
+        <span class="pill">TypeScript</span>
+        <span class="pill">Cross-Platform</span>
       </div>
     </div>
 
-    <!-- Live terminal -->
-    <div class="hero-right">
-      <div class="terminal">
-        <div class="terminal-bar">
-          <div class="terminal-dot red"></div>
-          <div class="terminal-dot yellow"></div>
-          <div class="terminal-dot green"></div>
-          <span class="terminal-title">crystalsystem.js · live</span>
+    <!-- Terminal -->
+    <div class="hero-terminal" aria-hidden="true">
+      <div class="term-window">
+        <div class="term-bar">
+          <div class="dot r"></div>
+          <div class="dot y"></div>
+          <div class="dot g"></div>
+          <span class="term-title">crystalsystem.js · live · v1.0.2</span>
         </div>
-        <div class="terminal-body" id="terminal-body">
-          <!-- Lines injected by JS -->
-        </div>
+        <div class="term-body" id="tbody"></div>
       </div>
     </div>
+
   </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     BADGE TICKER
+════════════════════════════════════════════════ -->
+<div id="badges" aria-hidden="true">
+  <div class="badge-track" id="badge-track"></div>
 </div>
 
-<!-- FEATURES -->
-<section id="features">
-  <p class="section-label reveal">▸ Why crystalsystem.js</p>
-  <h2 class="section-title reveal">Everything you need.<br/>Nothing you don't.</h2>
-  <p class="section-sub reveal">Built entirely on Node.js built-ins. No audit warnings, no dependency drama, no version conflicts.</p>
-
-  <div class="features-grid">
-    <div class="feature-card reveal">
-      <span class="feature-icon">⚡</span>
-      <div class="feature-name">Real CPU %</div>
-      <div class="feature-desc">Actual usage via CPU time-delta sampling — not just load average. Far more accurate for spikes.</div>
+<!-- ════════════════════════════════════════════════
+     FEATURES
+════════════════════════════════════════════════ -->
+<section id="features" aria-label="Features">
+  <div class="container">
+    <div class="section-header">
+      <p class="tag reveal">Why crystalsystem.js</p>
+      <h2 class="section-heading reveal reveal-d1">Everything you need.<br/>Nothing you don't.</h2>
+      <p class="section-sub reveal reveal-d2">Built entirely on Node.js built-ins. No audit warnings, no dependency tree, no version conflicts — ever.</p>
     </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">📊</span>
-      <div class="feature-name">Sparklines</div>
-      <div class="feature-desc">Live ASCII history graphs for CPU and memory rendered directly inside your terminal dashboard.</div>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">🔔</span>
-      <div class="feature-name">Alert System</div>
-      <div class="feature-desc">Fire callbacks when CPU, memory or disk exceeds configurable thresholds. Built-in cooldown prevents spam.</div>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">📡</span>
-      <div class="feature-name">Event Emitter</div>
-      <div class="feature-desc"><code>cs.on('data', fn)</code> and <code>cs.on('alert', fn)</code> for tight integration with your own systems.</div>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">🌐</span>
-      <div class="feature-name">HTTP API</div>
-      <div class="feature-desc">Built-in JSON server at any port. Wire into Grafana, Discord bots, web dashboards — no setup needed.</div>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">📝</span>
-      <div class="feature-name">File Logging</div>
-      <div class="feature-desc">Append JSON-line stats to a file every tick. Read them back with <code>logger.readAll()</code> for analysis.</div>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">🖥️</span>
-      <div class="feature-name">CLI Binary</div>
-      <div class="feature-desc"><code>crystalsystem --once --json -p 3001 -l stats.json</code> — full control from your terminal.</div>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">🔝</span>
-      <div class="feature-name">Top Processes</div>
-      <div class="feature-desc">Shows top N processes sorted by memory usage inside the dashboard — like a lightweight htop.</div>
-    </div>
-    <div class="feature-card reveal">
-      <span class="feature-icon">📘</span>
-      <div class="feature-name">TypeScript</div>
-      <div class="feature-desc">Full <code>.d.ts</code> definitions for every function, interface and option. No <code>@types</code> package needed.</div>
+    <div class="features-grid">
+      <div class="feat-card reveal"><span class="feat-num">01</span><span class="feat-icon">⚡</span><div class="feat-name">Real CPU %</div><div class="feat-desc">Actual usage via CPU time-delta sampling — not just load average. Catches spikes load average misses entirely.</div></div>
+      <div class="feat-card reveal reveal-d1"><span class="feat-num">02</span><span class="feat-icon">📊</span><div class="feat-name">Sparklines</div><div class="feat-desc">Live <code>▁▂▄▆█</code> ASCII history graphs for CPU and memory inside the terminal dashboard. Color-coded by severity.</div></div>
+      <div class="feat-card reveal reveal-d2"><span class="feat-num">03</span><span class="feat-icon">🔔</span><div class="feat-name">Alert System</div><div class="feat-desc">Threshold alerts with configurable cooldown. Fire on CPU, memory or disk. Built-in per-type spam prevention.</div></div>
+      <div class="feat-card reveal"><span class="feat-num">04</span><span class="feat-icon">📡</span><div class="feat-name">Event Emitter</div><div class="feat-desc"><code>cs.on('data', fn)</code> every tick. <code>cs.on('alert', fn)</code> on breach. <code>cs.on('stop', fn)</code> on teardown.</div></div>
+      <div class="feat-card reveal reveal-d1"><span class="feat-num">05</span><span class="feat-icon">🌐</span><div class="feat-name">HTTP API</div><div class="feat-desc">Built-in JSON server. <code>/</code> <code>/cpu</code> <code>/memory</code> <code>/disk</code> <code>/network</code> <code>/battery</code> <code>/health</code> — all CORS enabled.</div></div>
+      <div class="feat-card reveal reveal-d2"><span class="feat-num">06</span><span class="feat-icon">📝</span><div class="feat-name">File Logging</div><div class="feat-desc">JSON-line stats log every tick. <code>logger.readAll()</code> for historical analysis — find peak CPU, average RAM and more.</div></div>
+      <div class="feat-card reveal"><span class="feat-num">07</span><span class="feat-icon">🖥️</span><div class="feat-name">CLI Binary</div><div class="feat-desc"><code>crystalsystem --once --json -p 3001 -l log.json --no-gpu</code> — full control without writing a single line of code.</div></div>
+      <div class="feat-card reveal reveal-d1"><span class="feat-num">08</span><span class="feat-icon">🔝</span><div class="feat-name">Top Processes</div><div class="feat-desc">Shows the top N processes sorted by memory usage inside the dashboard — a lightweight inline <code>htop</code>.</div></div>
+      <div class="feat-card reveal reveal-d2"><span class="feat-num">09</span><span class="feat-icon">📘</span><div class="feat-name">TypeScript</div><div class="feat-desc">Full <code>.d.ts</code> definitions for every function, interface, option and event. Zero <code>@types</code> packages required.</div></div>
     </div>
   </div>
 </section>
 
-<!-- USAGE -->
-<section id="usage">
-  <p class="section-label reveal">▸ Usage</p>
-  <h2 class="section-title reveal">From zero to live monitor<br/>in three lines.</h2>
-  <p class="section-sub reveal">Every example below runs as-is. No config, no boilerplate.</p>
-
-  <div class="reveal">
-    <div class="code-tabs">
-      <button class="code-tab active" onclick="switchTab(this,'tab-basic')">Quick Start</button>
-      <button class="code-tab" onclick="switchTab(this,'tab-events')">Event Emitter</button>
-      <button class="code-tab" onclick="switchTab(this,'tab-http')">HTTP API</button>
-      <button class="code-tab" onclick="switchTab(this,'tab-ts')">TypeScript</button>
-      <button class="code-tab" onclick="switchTab(this,'tab-cli')">CLI</button>
+<!-- ════════════════════════════════════════════════
+     USAGE / CODE EXAMPLES
+════════════════════════════════════════════════ -->
+<section id="usage" aria-label="Usage examples">
+  <div class="container">
+    <div class="section-header">
+      <p class="tag reveal">Usage</p>
+      <h2 class="section-heading reveal reveal-d1">From zero to live monitor<br/>in three lines.</h2>
+      <p class="section-sub reveal reveal-d2">Every example below is copy-paste ready. No config, no boilerplate, no extra packages.</p>
     </div>
 
-    <div class="code-panel active" id="tab-basic">
-      <button class="copy-code-btn" onclick="copyCode(this)">copy</button>
-      <pre><span class="cm">// Just require and go — dashboard starts immediately</span>
-<span class="kw">const</span> { crystalsystem } = <span class="fn">require</span>(<span class="str">'@crystal-studio-labs/crystalsystem.js'</span>);
+    <div class="reveal">
+      <div class="tabs-row" role="tablist">
+        <button class="tab-btn on" role="tab" onclick="tab(this,'t0')">Quick Start</button>
+        <button class="tab-btn"   role="tab" onclick="tab(this,'t1')">Event Emitter</button>
+        <button class="tab-btn"   role="tab" onclick="tab(this,'t2')">HTTP API</button>
+        <button class="tab-btn"   role="tab" onclick="tab(this,'t3')">Logging</button>
+        <button class="tab-btn"   role="tab" onclick="tab(this,'t4')">TypeScript</button>
+        <button class="tab-btn"   role="tab" onclick="tab(this,'t5')">CLI</button>
+      </div>
+
+      <div class="tab-panel on" id="t0"><div class="code-box">
+        <button class="copy-btn2" onclick="cpCode(this)">copy</button>
+        <pre><span class="kw">const</span> { crystalsystem } = <span class="fn">require</span>(<span class="st">'@crystal-studio-labs/crystalsystem.js'</span>);
 
 <span class="fn">crystalsystem</span>({
-  <span class="prop">interval</span>:      <span class="num">5000</span>,   <span class="cm">// refresh every 5s</span>
-  <span class="prop">clearConsole</span>:  <span class="kw">true</span>,
-  <span class="prop">showColors</span>:    <span class="kw">true</span>,
-  <span class="prop">showNetwork</span>:   <span class="kw">true</span>,
-  <span class="prop">showDisk</span>:      <span class="kw">true</span>,
-  <span class="prop">showBattery</span>:   <span class="kw">true</span>,
-  <span class="prop">showGPU</span>:       <span class="kw">true</span>,
-  <span class="prop">showProcesses</span>: <span class="kw">true</span>,
-  <span class="prop">httpPort</span>:      <span class="num">3001</span>,   <span class="cm">// optional live JSON API</span>
-  <span class="prop">logFile</span>:       <span class="str">'stats.json'</span>,
-  <span class="prop">thresholds</span>: {
-    <span class="prop">cpu</span>:    <span class="num">80</span>,
-    <span class="prop">memory</span>: <span class="num">75</span>,
-    <span class="prop">disk</span>:   <span class="num">85</span>,
+  <span class="pr">interval</span>:      <span class="nm">5000</span>,         <span class="cm">// refresh every 5 seconds</span>
+  <span class="pr">clearConsole</span>:  <span class="kw">true</span>,
+  <span class="pr">showColors</span>:    <span class="kw">true</span>,
+  <span class="pr">showNetwork</span>:   <span class="kw">true</span>,
+  <span class="pr">showDisk</span>:      <span class="kw">true</span>,
+  <span class="pr">showBattery</span>:   <span class="kw">true</span>,
+  <span class="pr">showGPU</span>:       <span class="kw">true</span>,
+  <span class="pr">showProcesses</span>: <span class="kw">true</span>,
+  <span class="pr">httpPort</span>:      <span class="nm">3001</span>,         <span class="cm">// optional live JSON API</span>
+  <span class="pr">logFile</span>:       <span class="st">'stats.json'</span>, <span class="cm">// optional file log</span>
+  <span class="pr">thresholds</span>: {
+    <span class="pr">cpu</span>:    <span class="nm">80</span>,
+    <span class="pr">memory</span>: <span class="nm">75</span>,
+    <span class="pr">disk</span>:   <span class="nm">85</span>,
   },
 });</pre>
-    </div>
+      </div></div>
 
-    <div class="code-panel" id="tab-events">
-      <button class="copy-code-btn" onclick="copyCode(this)">copy</button>
-      <pre><span class="kw">const</span> { CrystalSystem } = <span class="fn">require</span>(<span class="str">'@crystal-studio-labs/crystalsystem.js'</span>);
+      <div class="tab-panel" id="t1"><div class="code-box">
+        <button class="copy-btn2" onclick="cpCode(this)">copy</button>
+        <pre><span class="kw">const</span> { CrystalSystem } = <span class="fn">require</span>(<span class="st">'@crystal-studio-labs/crystalsystem.js'</span>);
 
 <span class="kw">const</span> cs = <span class="kw">new</span> <span class="fn">CrystalSystem</span>({
-  <span class="prop">interval</span>:   <span class="num">2000</span>,
-  <span class="prop">thresholds</span>: { <span class="prop">cpu</span>: <span class="num">80</span>, <span class="prop">memory</span>: <span class="num">75</span> },
+  <span class="pr">interval</span>:   <span class="nm">2000</span>,
+  <span class="pr">thresholds</span>: { <span class="pr">cpu</span>: <span class="nm">80</span>, <span class="pr">memory</span>: <span class="nm">75</span>, <span class="pr">disk</span>: <span class="nm">85</span> },
 });
 
-<span class="cm">// Every tick — full stats object</span>
-cs.<span class="fn">on</span>(<span class="str">'data'</span>, (stats) => {
-  console.<span class="fn">log</span>(<span class="str">'CPU:'</span>, stats.cpu.loadPercent);
-  console.<span class="fn">log</span>(<span class="str">'RAM:'</span>, stats.memory.percent);
-  console.<span class="fn">log</span>(<span class="str">'Net:'</span>, stats.network.rxSpeed);
+<span class="cm">// Fires every tick with a full SystemStats object</span>
+cs.<span class="fn">on</span>(<span class="st">'data'</span>, (stats) => {
+  console.<span class="fn">log</span>(<span class="st">'CPU:'</span>,  stats.cpu.loadPercent);
+  console.<span class="fn">log</span>(<span class="st">'RAM:'</span>,  stats.memory.percent);
+  console.<span class="fn">log</span>(<span class="st">'Net↓:'</span>, stats.network.rxSpeed);
+  console.<span class="fn">log</span>(<span class="st">'Net↑:'</span>, stats.network.txSpeed);
 });
 
-<span class="cm">// Threshold breach — send webhook, restart, log, anything</span>
-cs.<span class="fn">on</span>(<span class="str">'alert'</span>, ({ type, message, value, threshold }) => {
-  console.<span class="fn">error</span>(<span class="str">`⚠️  [${type}] ${message}`</span>);
+<span class="cm">// Fires when a threshold is breached</span>
+cs.<span class="fn">on</span>(<span class="st">'alert'</span>, ({ type, message, value, threshold }) => {
+  console.<span class="fn">error</span>(<span class="st">`⚠️  [${type.toUpperCase()}] ${message}`</span>);
+  <span class="cm">// Send to Discord, Slack, Telegram, email — see Alerts section</span>
 });
 
-cs.<span class="fn">on</span>(<span class="str">'stop'</span>, () => console.<span class="fn">log</span>(<span class="str">'Stopped.'</span>));
+cs.<span class="fn">on</span>(<span class="st">'stop'</span>, () => console.<span class="fn">log</span>(<span class="st">'Monitor stopped.'</span>));
 
 cs.<span class="fn">start</span>();
 
-<span class="cm">// Update threshold at runtime</span>
-cs.<span class="fn">setThreshold</span>(<span class="str">'cpu'</span>, <span class="num">70</span>);
+<span class="cm">// Change a threshold at runtime (no restart needed)</span>
+cs.<span class="fn">setThreshold</span>(<span class="st">'cpu'</span>, <span class="nm">70</span>);
 
-<span class="cm">// One-shot snapshot</span>
+<span class="cm">// One-shot snapshot without a display loop</span>
 <span class="kw">const</span> snap = cs.<span class="fn">snapshot</span>();
-console.<span class="fn">log</span>(snap.cpu.model, snap.memory.total);</pre>
-    </div>
+console.<span class="fn">log</span>(snap.cpu.model, snap.memory.total);
 
-    <div class="code-panel" id="tab-http">
-      <button class="copy-code-btn" onclick="copyCode(this)">copy</button>
-      <pre><span class="kw">const</span> { crystalsystem } = <span class="fn">require</span>(<span class="str">'@crystal-studio-labs/crystalsystem.js'</span>);
+<span class="cm">// Stop after 60 seconds</span>
+setTimeout(() => cs.<span class="fn">stop</span>(), <span class="nm">60_000</span>);</pre>
+      </div></div>
+
+      <div class="tab-panel" id="t2"><div class="code-box">
+        <button class="copy-btn2" onclick="cpCode(this)">copy</button>
+        <pre><span class="kw">const</span> { crystalsystem, startHttpServer } = <span class="fn">require</span>(<span class="st">'@crystal-studio-labs/crystalsystem.js'</span>);
 
 <span class="cm">// Start dashboard + HTTP API together</span>
-<span class="fn">crystalsystem</span>({ <span class="prop">httpPort</span>: <span class="num">3001</span> });
+<span class="fn">crystalsystem</span>({ <span class="pr">httpPort</span>: <span class="nm">3001</span> });
 
-<span class="cm">// Available endpoints:</span>
-<span class="cm">// GET http://localhost:3001/          → all stats</span>
-<span class="cm">// GET http://localhost:3001/cpu       → CPU info</span>
-<span class="cm">// GET http://localhost:3001/memory    → memory info</span>
-<span class="cm">// GET http://localhost:3001/network   → network info</span>
-<span class="cm">// GET http://localhost:3001/disk      → disk info</span>
-<span class="cm">// GET http://localhost:3001/battery   → battery info</span>
-<span class="cm">// GET http://localhost:3001/health    → { status: 'ok' }</span>
+<span class="cm">// ── Available endpoints ──────────────────────────────
+// GET /          → All stats as JSON
+// GET /cpu       → CPU model, speed, cores, usage %
+// GET /memory    → Total, used, free, percent
+// GET /network   → Speeds + cumulative traffic
+// GET /disk      → Partitions, total, used, free
+// GET /battery   → Level, charging status
+// GET /health    → { status: 'ok', uptime: ... }
+// All responses include Access-Control-Allow-Origin: *</span>
 
-<span class="cm">// Or start the server independently</span>
-<span class="kw">const</span> { startHttpServer } = <span class="fn">require</span>(<span class="str">'@crystal-studio-labs/crystalsystem.js'</span>);
-<span class="kw">const</span> server = <span class="fn">startHttpServer</span>(<span class="num">3001</span>);
-<span class="cm">// server is a Node.js http.Server</span></pre>
-    </div>
+<span class="cm">// Or start the API server independently (no dashboard)</span>
+<span class="kw">const</span> server = <span class="fn">startHttpServer</span>(<span class="nm">4000</span>);
+<span class="cm">// server is a Node.js http.Server — call server.close() to stop</span>
 
-    <div class="code-panel" id="tab-ts">
-      <button class="copy-code-btn" onclick="copyCode(this)">copy</button>
-      <pre><span class="kw">import</span> crystalsystem, {
+<span class="cm">// Fetch from anywhere</span>
+<span class="kw">const</span> res  = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'http://localhost:3001/cpu'</span>);
+<span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+console.<span class="fn">log</span>(data.model, data.loadPercent);</pre>
+      </div></div>
+
+      <div class="tab-panel" id="t3"><div class="code-box">
+        <button class="copy-btn2" onclick="cpCode(this)">copy</button>
+        <pre><span class="kw">const</span> { crystalsystem, createLogger, getAllStats } = <span class="fn">require</span>(<span class="st">'@crystal-studio-labs/crystalsystem.js'</span>);
+
+<span class="cm">// Auto-log every tick via the main monitor</span>
+<span class="fn">crystalsystem</span>({ <span class="pr">logFile</span>: <span class="st">'stats.json'</span>, <span class="pr">interval</span>: <span class="nm">10_000</span> });
+
+<span class="cm">// ── Or log manually ──────────────────────────────────</span>
+<span class="kw">const</span> logger = <span class="fn">createLogger</span>(<span class="st">'stats.json'</span>);
+
+<span class="cm">// Write a snapshot right now</span>
+logger.<span class="fn">write</span>(<span class="fn">getAllStats</span>());
+
+<span class="cm">// Read all saved snapshots back</span>
+<span class="kw">const</span> history = logger.<span class="fn">readAll</span>();
+console.<span class="fn">log</span>(<span class="st">`${history.length} entries recorded`</span>);
+
+<span class="cm">// Analyse: find peak and average CPU</span>
+<span class="kw">const</span> peakCPU = Math.<span class="fn">max</span>(...history.<span class="fn">map</span>(s => s.cpu.loadRaw));
+<span class="kw">const</span> avgCPU  = history.<span class="fn">reduce</span>((a, s) => a + s.cpu.loadRaw, <span class="nm">0</span>) / history.length;
+console.<span class="fn">log</span>(<span class="st">`Peak: ${peakCPU.toFixed(2)}%  Avg: ${avgCPU.toFixed(2)}%`</span>);</pre>
+      </div></div>
+
+      <div class="tab-panel" id="t4"><div class="code-box">
+        <button class="copy-btn2" onclick="cpCode(this)">copy</button>
+        <pre><span class="kw">import</span> crystalsystem, {
   CrystalSystem,
   CrystalSystemOptions,
   SystemStats,
   AlertEvent,
   CPUInfo,
-} <span class="kw">from</span> <span class="str">'@crystal-studio-labs/crystalsystem.js'</span>;
+  MemoryInfo,
+} <span class="kw">from</span> <span class="st">'@crystal-studio-labs/crystalsystem.js'</span>;
 
 <span class="kw">const</span> options: CrystalSystemOptions = {
-  <span class="prop">interval</span>:   <span class="num">3000</span>,
-  <span class="prop">thresholds</span>: { <span class="prop">cpu</span>: <span class="num">80</span>, <span class="prop">memory</span>: <span class="num">80</span> },
-  <span class="prop">httpPort</span>:   <span class="num">3001</span>,
+  <span class="pr">interval</span>:   <span class="nm">3000</span>,
+  <span class="pr">thresholds</span>: { <span class="pr">cpu</span>: <span class="nm">80</span>, <span class="pr">memory</span>: <span class="nm">75</span>, <span class="pr">disk</span>: <span class="nm">85</span> },
+  <span class="pr">httpPort</span>:   <span class="nm">3001</span>,
 };
 
 <span class="kw">const</span> cs: CrystalSystem = <span class="fn">crystalsystem</span>(options);
 
-cs.<span class="fn">on</span>(<span class="str">'data'</span>, (stats: SystemStats) => {
-  <span class="kw">const</span> cpu: CPUInfo = stats.cpu;
-  console.<span class="fn">log</span>(cpu.loadPercent, stats.memory.percent);
+cs.<span class="fn">on</span>(<span class="st">'data'</span>, (stats: SystemStats) => {
+  <span class="kw">const</span> cpu: CPUInfo    = stats.cpu;
+  <span class="kw">const</span> mem: MemoryInfo = stats.memory;
+  console.<span class="fn">log</span>(cpu.loadPercent, mem.percent);
 });
 
-cs.<span class="fn">on</span>(<span class="str">'alert'</span>, (alert: AlertEvent) => {
-  console.<span class="fn">error</span>(<span class="str">`[${alert.type.toUpperCase()}] ${alert.message}`</span>);
+cs.<span class="fn">on</span>(<span class="st">'alert'</span>, (alert: AlertEvent) => {
+  console.<span class="fn">error</span>(<span class="st">`[${alert.type.toUpperCase()}] ${alert.message}`</span>);
 });</pre>
-    </div>
+      </div></div>
 
-    <div class="code-panel" id="tab-cli">
-      <button class="copy-code-btn" onclick="copyCode(this)">copy</button>
-      <pre><span class="cm"># Install globally</span>
+      <div class="tab-panel" id="t5"><div class="code-box">
+        <button class="copy-btn2" onclick="cpCode(this)">copy</button>
+        <pre><span class="cm"># Install globally</span>
 $ npm install -g @crystal-studio-labs/crystalsystem.js
 
-<span class="cm"># Live dashboard (5s refresh)</span>
+<span class="cm"># Live dashboard (5s refresh default)</span>
 $ crystalsystem
 
-<span class="cm"># Refresh every 2 seconds</span>
+<span class="cm"># Custom interval</span>
 $ crystalsystem -i 2
 
-<span class="cm"># Show once and exit</span>
+<span class="cm"># One-shot display then exit</span>
 $ crystalsystem --once
 
-<span class="cm"># JSON snapshot to stdout</span>
-$ crystalsystem --json
+<span class="cm"># JSON snapshot to stdout (pipe-friendly)</span>
+$ crystalsystem --json | jq '.cpu.loadPercent'
 
-<span class="cm"># Dashboard + HTTP API + file log</span>
+<span class="cm"># Dashboard + HTTP API on port 3001 + file log</span>
 $ crystalsystem -p 3001 -l stats.json
 
-<span class="cm"># Hide sections</span>
+<span class="cm"># Hide sections you don't need</span>
 $ crystalsystem --no-disk --no-gpu --no-battery
 
-<span class="cm"># Pipe clean output</span>
+<span class="cm"># Pipe clean output to a file</span>
 $ crystalsystem --once --no-color > snapshot.txt
 
-<span class="cm"># Help</span>
+<span class="cm"># All flags</span>
 $ crystalsystem --help</pre>
+      </div></div>
     </div>
   </div>
 </section>
 
-<!-- ALERTS -->
-<section id="alerts">
-  <p class="section-label reveal">▸ Alert Integrations</p>
-  <h2 class="section-title reveal">12 ways to get notified.<br/>Zero extra packages.</h2>
-  <p class="section-sub reveal">Every alert type is a standalone example file in the examples repository. Copy, paste, run.</p>
+<!-- ════════════════════════════════════════════════
+     DOCUMENTATION
+════════════════════════════════════════════════ -->
+<section id="docs" aria-label="Documentation">
+  <div class="container">
+    <div class="section-header">
+      <p class="tag reveal">Documentation</p>
+      <h2 class="section-heading reveal reveal-d1">Full API reference.</h2>
+      <p class="section-sub reveal reveal-d2">Every function, method, option and TypeScript interface documented in one place.</p>
+    </div>
 
-  <div class="alerts-grid">
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">🟣</span>
-      <div class="alert-card-name">Discord</div>
-      <div class="alert-card-desc">Rich embed with all stats</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">🟢</span>
-      <div class="alert-card-name">Slack</div>
-      <div class="alert-card-desc">Formatted attachment fields</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">✈️</span>
-      <div class="alert-card-name">Telegram</div>
-      <div class="alert-card-desc">Markdown bot message</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">📧</span>
-      <div class="alert-card-name">Email</div>
-      <div class="alert-card-desc">Gmail SMTP, no deps</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">💬</span>
-      <div class="alert-card-name">WhatsApp</div>
-      <div class="alert-card-desc">Via CallMeBot API</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">🖥️</span>
-      <div class="alert-card-name">Desktop</div>
-      <div class="alert-card-desc">Native OS notification</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">🔊</span>
-      <div class="alert-card-name">Beep</div>
-      <div class="alert-card-desc">Sound + terminal bell</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">📄</span>
-      <div class="alert-card-name">Log File</div>
-      <div class="alert-card-desc">Structured ASCII log</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">🌐</span>
-      <div class="alert-card-name">HTTP POST</div>
-      <div class="alert-card-desc">JSON to any server</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">🖨️</span>
-      <div class="alert-card-name">Console</div>
-      <div class="alert-card-desc">Fancy ANSI block</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">🔄</span>
-      <div class="alert-card-name">Auto Restart</div>
-      <div class="alert-card-desc">Re-spawns the process</div>
-    </a>
-    <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">
-      <span class="alert-card-icon">📋</span>
-      <div class="alert-card-name">Syslog</div>
-      <div class="alert-card-desc">Standard log format</div>
-    </a>
+    <div class="docs-layout reveal">
+      <!-- Sidebar -->
+      <aside class="docs-sidebar" aria-label="Documentation navigation">
+        <p class="docs-nav-label">On this page</p>
+        <ul class="docs-nav-list" id="docs-nav">
+          <li><a href="#doc-install" class="active">Installation</a></li>
+          <li><a href="#doc-functions">Functions</a></li>
+          <li><a href="#doc-class">CrystalSystem Class</a></li>
+          <li><a href="#doc-options">Options</a></li>
+          <li><a href="#doc-events">Events</a></li>
+          <li><a href="#doc-types">TypeScript Types</a></li>
+          <li><a href="#doc-http">HTTP API</a></li>
+          <li><a href="#doc-cli-flags">CLI Flags</a></li>
+        </ul>
+      </aside>
+
+      <!-- Content -->
+      <div class="docs-content">
+
+        <div class="doc-section" id="doc-install">
+          <h3>Installation <a class="anchor" href="#doc-install">#</a></h3>
+          <p>Install from npm. No other packages are installed — crystalsystem.js uses only Node.js built-in modules.</p>
+          <div class="doc-code"><span class="cm"># npm</span>
+npm install @crystal-studio-labs/crystalsystem.js
+
+<span class="cm"># yarn</span>
+yarn add @crystal-studio-labs/crystalsystem.js
+
+<span class="cm"># Install CLI globally</span>
+npm install -g @crystal-studio-labs/crystalsystem.js</div>
+          <p>Requires <strong>Node.js 14 or higher</strong>. Works on Linux, macOS, Windows, Android (Termux) and BSD.</p>
+        </div>
+
+        <div class="doc-section" id="doc-functions">
+          <h3>Functions <a class="anchor" href="#doc-functions">#</a></h3>
+          <p>All functions are available as named exports. Import only what you need.</p>
+          <table class="opt-table">
+            <thead><tr><th>Function</th><th>Returns</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>crystalsystem(opts?)</td><td>CrystalSystem</td><td>Start live monitor. Returns a running instance.</td></tr>
+              <tr><td>buildSystemTable(opts?)</td><td>string</td><td>Full ANSI dashboard as a string. No loop started.</td></tr>
+              <tr><td>getAllStats(opts?)</td><td>SystemStats</td><td>One-shot snapshot of all stats. No display.</td></tr>
+              <tr><td>startHttpServer(port?, opts?)</td><td>http.Server</td><td>Start HTTP API independently without dashboard.</td></tr>
+              <tr><td>createLogger(path)</td><td>Logger</td><td>Create a JSON-line file logger.</td></tr>
+              <tr><td>getPlatformInfo()</td><td>PlatformInfo</td><td>OS name, arch, hostname, release.</td></tr>
+              <tr><td>getCPUInfo()</td><td>CPUInfo</td><td>Model, speed, cores, real usage % via time delta.</td></tr>
+              <tr><td>getMemoryInfo()</td><td>MemoryInfo</td><td>Total, used, free, percentage.</td></tr>
+              <tr><td>getNetworkInfo()</td><td>NetworkInfo</td><td>Cumulative traffic and live speed.</td></tr>
+              <tr><td>getDiskInfo()</td><td>DiskInfo</td><td>Partitions, total, used, free.</td></tr>
+              <tr><td>getBatteryInfo()</td><td>BatteryInfo</td><td>Level and charging status.</td></tr>
+              <tr><td>getGPUInfo()</td><td>GPUInfo</td><td>GPU model where detectable.</td></tr>
+              <tr><td>getProcessInfo()</td><td>ProcessInfo</td><td>PID, Node version, heap usage.</td></tr>
+              <tr><td>getTopProcesses(n?)</td><td>TopProcess[]</td><td>Top N processes sorted by memory.</td></tr>
+              <tr><td>formatBytes(n, dec?)</td><td>string</td><td>Convert bytes to readable string — "1.4 GB".</td></tr>
+              <tr><td>sparkline(arr, width?)</td><td>string</td><td>ANSI sparkline from a number array.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-section" id="doc-class">
+          <h3>CrystalSystem Class <a class="anchor" href="#doc-class">#</a></h3>
+          <p><code>CrystalSystem</code> extends Node's <code>EventEmitter</code>. Use it when you need programmatic control — starting and stopping, listening to events, or changing thresholds at runtime.</p>
+          <div class="doc-code"><span class="kw">const</span> { CrystalSystem } = <span class="fn">require</span>(<span class="st">'@crystal-studio-labs/crystalsystem.js'</span>);
+
+<span class="kw">const</span> cs = <span class="kw">new</span> <span class="fn">CrystalSystem</span>(options);
+cs.<span class="fn">start</span>();</div>
+          <table class="opt-table">
+            <thead><tr><th>Method</th><th>Returns</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>.start()</td><td>this</td><td>Start the monitor loop and HTTP server if configured.</td></tr>
+              <tr><td>.stop()</td><td>this</td><td>Stop loop and close HTTP server. Emits 'stop'.</td></tr>
+              <tr><td>.display()</td><td>void</td><td>Render and print the dashboard immediately.</td></tr>
+              <tr><td>.snapshot()</td><td>SystemStats</td><td>Get a one-shot stats object without displaying.</td></tr>
+              <tr><td>.setThreshold(type, n)</td><td>this</td><td>Update a threshold at runtime. No restart needed.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-section" id="doc-options">
+          <h3>Options <a class="anchor" href="#doc-options">#</a></h3>
+          <p>Pass an options object to <code>crystalsystem()</code> or <code>new CrystalSystem()</code>. All options are optional.</p>
+          <table class="opt-table">
+            <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>interval</td><td>number</td><td>5000</td><td>Refresh in ms. Set to 0 to display once with no loop.</td></tr>
+              <tr><td>clearConsole</td><td>boolean</td><td>true</td><td>Clear terminal before each render.</td></tr>
+              <tr><td>showColors</td><td>boolean</td><td>true</td><td>Enable ANSI colors in the dashboard.</td></tr>
+              <tr><td>showNetwork</td><td>boolean</td><td>true</td><td>Show network section.</td></tr>
+              <tr><td>showDisk</td><td>boolean</td><td>true</td><td>Show disk section.</td></tr>
+              <tr><td>showBattery</td><td>boolean</td><td>true</td><td>Show battery section if supported.</td></tr>
+              <tr><td>showGPU</td><td>boolean</td><td>true</td><td>Show GPU section if detectable.</td></tr>
+              <tr><td>showProcesses</td><td>boolean</td><td>true</td><td>Show top processes section.</td></tr>
+              <tr><td>historySize</td><td>number</td><td>30</td><td>Number of data points kept for sparklines.</td></tr>
+              <tr><td>logFile</td><td>string|null</td><td>null</td><td>Path to JSON-line log file. Written every tick.</td></tr>
+              <tr><td>httpPort</td><td>number|null</td><td>null</td><td>Port to start the HTTP API server on.</td></tr>
+              <tr><td>thresholds.cpu</td><td>number</td><td>90</td><td>CPU alert threshold %.</td></tr>
+              <tr><td>thresholds.memory</td><td>number</td><td>85</td><td>Memory alert threshold %.</td></tr>
+              <tr><td>thresholds.disk</td><td>number</td><td>90</td><td>Disk alert threshold %.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-section" id="doc-events">
+          <h3>Events <a class="anchor" href="#doc-events">#</a></h3>
+          <p>All events are emitted on the <code>CrystalSystem</code> instance. Use <code>cs.on(event, fn)</code> to listen.</p>
+          <table class="opt-table">
+            <thead><tr><th>Event</th><th>Payload</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>'data'</td><td>SystemStats</td><td>Emitted every tick. Contains all stats in one object.</td></tr>
+              <tr><td>'alert'</td><td>AlertEvent</td><td>Emitted when CPU, memory or disk exceeds threshold.</td></tr>
+              <tr><td>'stop'</td><td>void</td><td>Emitted when .stop() is called.</td></tr>
+            </tbody>
+          </table>
+          <p>The <code>AlertEvent</code> object has four properties: <code>type</code> ('cpu' | 'memory' | 'disk'), <code>message</code> (string), <code>value</code> (number — current %), <code>threshold</code> (number — configured limit).</p>
+        </div>
+
+        <div class="doc-section" id="doc-types">
+          <h3>TypeScript Types <a class="anchor" href="#doc-types">#</a></h3>
+          <p>All interfaces are exported from the package. No <code>@types</code> package needed.</p>
+          <table class="opt-table">
+            <thead><tr><th>Interface</th><th>Used for</th></tr></thead>
+            <tbody>
+              <tr><td>CrystalSystemOptions</td><td>Options passed to crystalsystem() or new CrystalSystem()</td></tr>
+              <tr><td>SystemStats</td><td>Full snapshot — returned by snapshot() and 'data' event</td></tr>
+              <tr><td>AlertEvent</td><td>Payload of the 'alert' event</td></tr>
+              <tr><td>PlatformInfo</td><td>Return type of getPlatformInfo()</td></tr>
+              <tr><td>CPUInfo</td><td>Return type of getCPUInfo()</td></tr>
+              <tr><td>MemoryInfo</td><td>Return type of getMemoryInfo()</td></tr>
+              <tr><td>NetworkInfo</td><td>Return type of getNetworkInfo()</td></tr>
+              <tr><td>NetworkInterface</td><td>Individual interface entry inside NetworkInfo</td></tr>
+              <tr><td>DiskInfo</td><td>Return type of getDiskInfo()</td></tr>
+              <tr><td>PartitionInfo</td><td>Individual partition inside DiskInfo</td></tr>
+              <tr><td>BatteryInfo</td><td>Return type of getBatteryInfo()</td></tr>
+              <tr><td>GPUInfo</td><td>Return type of getGPUInfo()</td></tr>
+              <tr><td>ProcessInfo</td><td>Return type of getProcessInfo()</td></tr>
+              <tr><td>TopProcess</td><td>Individual entry in getTopProcesses()</td></tr>
+              <tr><td>AlertThresholds</td><td>Shape of the thresholds option</td></tr>
+              <tr><td>Logger</td><td>Return type of createLogger()</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-section" id="doc-http">
+          <h3>HTTP API <a class="anchor" href="#doc-http">#</a></h3>
+          <p>Enable with <code>httpPort: 3001</code> in options, or start independently with <code>startHttpServer(3001)</code>. All endpoints return JSON with <code>Access-Control-Allow-Origin: *</code>.</p>
+          <table class="opt-table">
+            <thead><tr><th>Route</th><th>Returns</th></tr></thead>
+            <tbody>
+              <tr><td>GET /</td><td>Full SystemStats object</td></tr>
+              <tr><td>GET /cpu</td><td>CPUInfo — model, speed, cores, usage</td></tr>
+              <tr><td>GET /memory</td><td>MemoryInfo — total, used, free, percent</td></tr>
+              <tr><td>GET /network</td><td>NetworkInfo — speeds and cumulative traffic</td></tr>
+              <tr><td>GET /disk</td><td>DiskInfo — partitions, total, used, free</td></tr>
+              <tr><td>GET /battery</td><td>BatteryInfo — level and charging status</td></tr>
+              <tr><td>GET /health</td><td>{ status: 'ok', uptime: number }</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-section" id="doc-cli-flags">
+          <h3>CLI Flags <a class="anchor" href="#doc-cli-flags">#</a></h3>
+          <p>All flags are available when running <code>crystalsystem</code> from the terminal after a global install.</p>
+          <table class="opt-table">
+            <thead><tr><th>Flag</th><th>Short</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>--help</td><td>-h</td><td>Show help and exit</td></tr>
+              <tr><td>--once</td><td>-o</td><td>Display once and exit (no loop)</td></tr>
+              <tr><td>--json</td><td>-j</td><td>Print JSON snapshot to stdout and exit</td></tr>
+              <tr><td>--interval &lt;sec&gt;</td><td>-i</td><td>Refresh every N seconds (default: 5)</td></tr>
+              <tr><td>--port &lt;port&gt;</td><td>-p</td><td>Start HTTP API server on this port</td></tr>
+              <tr><td>--log &lt;file&gt;</td><td>-l</td><td>Append stats to a JSON log file each tick</td></tr>
+              <tr><td>--no-color</td><td></td><td>Disable ANSI colors (good for piping)</td></tr>
+              <tr><td>--no-network</td><td></td><td>Hide network section</td></tr>
+              <tr><td>--no-disk</td><td></td><td>Hide disk section</td></tr>
+              <tr><td>--no-battery</td><td></td><td>Hide battery section</td></tr>
+              <tr><td>--no-gpu</td><td></td><td>Hide GPU section</td></tr>
+              <tr><td>--no-processes</td><td></td><td>Hide top processes section</td></tr>
+              <tr><td>--no-clear</td><td></td><td>Don't clear console between updates</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /docs-content -->
+    </div><!-- /docs-layout -->
   </div>
 </section>
 
-<!-- API -->
-<section id="api">
-  <p class="section-label reveal">▸ API Reference</p>
-  <h2 class="section-title reveal">Every function.<br/>Every option.</h2>
-
-  <div class="api-table-wrap reveal">
-    <table>
-      <thead>
-        <tr>
-          <th>Function</th>
-          <th>Returns</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>crystalsystem(opts?)</td><td><code>CrystalSystem</code></td><td>Start live monitor, returns running instance</td></tr>
-        <tr><td>new CrystalSystem(opts?)</td><td><code>CrystalSystem</code></td><td>Construct instance manually, call .start()</td></tr>
-        <tr><td>buildSystemTable(opts?)</td><td><code>string</code></td><td>Full ANSI dashboard table as a string</td></tr>
-        <tr><td>getAllStats(opts?)</td><td><code>SystemStats</code></td><td>All stats in one object, no display</td></tr>
-        <tr><td>startHttpServer(port?)</td><td><code>http.Server</code></td><td>Start HTTP API server independently</td></tr>
-        <tr><td>createLogger(filePath)</td><td><code>Logger</code></td><td>Create a JSON-line file logger</td></tr>
-        <tr><td>getCPUInfo()</td><td><code>CPUInfo</code></td><td>Model, speed, cores, real usage %</td></tr>
-        <tr><td>getMemoryInfo()</td><td><code>MemoryInfo</code></td><td>Total, used, free, percentage</td></tr>
-        <tr><td>getNetworkInfo()</td><td><code>NetworkInfo</code></td><td>Cumulative traffic and live speed</td></tr>
-        <tr><td>getDiskInfo()</td><td><code>DiskInfo</code></td><td>Partitions, total, used, free</td></tr>
-        <tr><td>getBatteryInfo()</td><td><code>BatteryInfo</code></td><td>Level and charging status</td></tr>
-        <tr><td>getGPUInfo()</td><td><code>GPUInfo</code></td><td>GPU model where detectable</td></tr>
-        <tr><td>getTopProcesses(n?)</td><td><code>TopProcess[]</code></td><td>Top N processes by memory</td></tr>
-        <tr><td>formatBytes(n, dec?)</td><td><code>string</code></td><td>Human-readable byte string</td></tr>
-        <tr><td>sparkline(arr, w?)</td><td><code>string</code></td><td>ANSI sparkline from number array</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- PLATFORMS -->
-<section id="platforms">
-  <p class="section-label reveal">▸ Platform Support</p>
-  <h2 class="section-title reveal">Runs everywhere<br/>Node.js runs.</h2>
-
-  <div class="platform-grid">
-    <div class="platform-card reveal">
-      <span class="platform-icon">🐧</span>
-      <div class="platform-name">Linux</div>
-      <div class="platform-features">
-        <span class="pf yes">CPU</span>
-        <span class="pf yes">Memory</span>
-        <span class="pf yes">Disk</span>
-        <span class="pf yes">Network</span>
-        <span class="pf yes">Battery</span>
-        <span class="pf yes">GPU</span>
-      </div>
+<!-- ════════════════════════════════════════════════
+     ALERTS
+════════════════════════════════════════════════ -->
+<section id="alerts" aria-label="Alert integrations">
+  <div class="container">
+    <div class="section-header">
+      <p class="tag reveal">Alert Integrations</p>
+      <h2 class="section-heading reveal reveal-d1">12 ways to get notified.<br/>Zero extra packages.</h2>
+      <p class="section-sub reveal reveal-d2">Every alert type is a standalone file in the examples repository. Find them at <a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank" style="color:var(--red)">crystalsystem.js-examples</a>.</p>
     </div>
-    <div class="platform-card reveal">
-      <span class="platform-icon">🤖</span>
-      <div class="platform-name">Android / Termux</div>
-      <div class="platform-features">
-        <span class="pf yes">CPU</span>
-        <span class="pf yes">Memory</span>
-        <span class="pf yes">Disk</span>
-        <span class="pf yes">Network</span>
-        <span class="pf yes">Battery</span>
-        <span class="pf yes">GPU</span>
-      </div>
-    </div>
-    <div class="platform-card reveal">
-      <span class="platform-icon">🍎</span>
-      <div class="platform-name">macOS</div>
-      <div class="platform-features">
-        <span class="pf yes">CPU</span>
-        <span class="pf yes">Memory</span>
-        <span class="pf yes">Disk</span>
-        <span class="pf yes">Network</span>
-        <span class="pf yes">Battery</span>
-        <span class="pf yes">GPU</span>
-      </div>
-    </div>
-    <div class="platform-card reveal">
-      <span class="platform-icon">🪟</span>
-      <div class="platform-name">Windows</div>
-      <div class="platform-features">
-        <span class="pf yes">CPU</span>
-        <span class="pf yes">Memory</span>
-        <span class="pf yes">Disk</span>
-        <span class="pf yes">Network</span>
-        <span class="pf no">Battery</span>
-        <span class="pf no">GPU</span>
-      </div>
-    </div>
-    <div class="platform-card reveal">
-      <span class="platform-icon">😈</span>
-      <div class="platform-name">FreeBSD</div>
-      <div class="platform-features">
-        <span class="pf yes">CPU</span>
-        <span class="pf yes">Memory</span>
-        <span class="pf yes">Disk</span>
-        <span class="pf yes">Network</span>
-        <span class="pf no">Battery</span>
-        <span class="pf no">GPU</span>
-      </div>
+    <div class="alerts-grid">
+      <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">🟣</span><div class="alert-name">Discord</div><div class="alert-desc">Rich embed</div></a>
+      <a class="alert-card reveal reveal-d1" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">🟢</span><div class="alert-name">Slack</div><div class="alert-desc">Attachment fields</div></a>
+      <a class="alert-card reveal reveal-d2" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">✈️</span><div class="alert-name">Telegram</div><div class="alert-desc">Markdown bot</div></a>
+      <a class="alert-card reveal reveal-d3" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">📧</span><div class="alert-name">Email</div><div class="alert-desc">Gmail SMTP</div></a>
+      <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">💬</span><div class="alert-name">WhatsApp</div><div class="alert-desc">CallMeBot API</div></a>
+      <a class="alert-card reveal reveal-d1" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">🖥️</span><div class="alert-name">Desktop</div><div class="alert-desc">Native notification</div></a>
+      <a class="alert-card reveal reveal-d2" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">🔊</span><div class="alert-name">Sound</div><div class="alert-desc">System beep</div></a>
+      <a class="alert-card reveal reveal-d3" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">📄</span><div class="alert-name">Log File</div><div class="alert-desc">ASCII structured log</div></a>
+      <a class="alert-card reveal" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">🌐</span><div class="alert-name">HTTP POST</div><div class="alert-desc">JSON to any server</div></a>
+      <a class="alert-card reveal reveal-d1" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">🖨️</span><div class="alert-name">Console</div><div class="alert-desc">ANSI block</div></a>
+      <a class="alert-card reveal reveal-d2" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">🔄</span><div class="alert-name">Auto Restart</div><div class="alert-desc">Re-spawns process</div></a>
+      <a class="alert-card reveal reveal-d3" href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank"><span class="alert-icon">📋</span><div class="alert-name">Syslog</div><div class="alert-desc">Standard format</div></a>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-brand">
-    <strong>crystalsystem.js</strong> &nbsp;·&nbsp; Crystal Studio Labs &nbsp;·&nbsp; MIT License
+<!-- ════════════════════════════════════════════════
+     PLATFORMS
+════════════════════════════════════════════════ -->
+<section id="platforms" aria-label="Platform support">
+  <div class="container">
+    <div class="section-header">
+      <p class="tag reveal">Platform Support</p>
+      <h2 class="section-heading reveal reveal-d1">Runs everywhere<br/>Node.js runs.</h2>
+      <p class="section-sub reveal reveal-d2">On Android/Termux, crystalsystem.js falls back to <code>/proc/cpuinfo</code> when <code>os.cpus()</code> is restricted — CPU info still works correctly.</p>
+    </div>
+    <div class="platform-grid">
+      <div class="plat-card reveal"><span class="plat-icon">🐧</span><div class="plat-name">Linux</div><div class="plat-feats"><span class="pf y">CPU</span><span class="pf y">Memory</span><span class="pf y">Disk</span><span class="pf y">Network</span><span class="pf y">Battery</span><span class="pf y">GPU</span></div></div>
+      <div class="plat-card reveal reveal-d1"><span class="plat-icon">🤖</span><div class="plat-name">Android/Termux</div><div class="plat-feats"><span class="pf y">CPU</span><span class="pf y">Memory</span><span class="pf y">Disk</span><span class="pf y">Network</span><span class="pf y">Battery</span><span class="pf y">GPU</span></div></div>
+      <div class="plat-card reveal reveal-d2"><span class="plat-icon">🍎</span><div class="plat-name">macOS</div><div class="plat-feats"><span class="pf y">CPU</span><span class="pf y">Memory</span><span class="pf y">Disk</span><span class="pf y">Network</span><span class="pf y">Battery</span><span class="pf y">GPU</span></div></div>
+      <div class="plat-card reveal reveal-d3"><span class="plat-icon">🪟</span><div class="plat-name">Windows</div><div class="plat-feats"><span class="pf y">CPU</span><span class="pf y">Memory</span><span class="pf y">Disk</span><span class="pf y">Network</span><span class="pf n">Battery</span><span class="pf n">GPU</span></div></div>
+      <div class="plat-card reveal reveal-d4"><span class="plat-icon">😈</span><div class="plat-name">FreeBSD</div><div class="plat-feats"><span class="pf y">CPU</span><span class="pf y">Memory</span><span class="pf y">Disk</span><span class="pf y">Network</span><span class="pf n">Battery</span><span class="pf n">GPU</span></div></div>
+    </div>
   </div>
-  <ul class="footer-links">
-    <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js" target="_blank">GitHub</a></li>
-    <li><a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js" target="_blank">npm</a></li>
-    <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">Examples</a></li>
-    <li><a href="https://github.com/SahooShuvranshu" target="_blank">Author</a></li>
-    <li><a href="https://discord.gg/4Cf42QEZ7c" target="_blank">Discord</a></li>
-  </ul>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo">❯ crystalsystem.js</div>
+        <p>Real-time system monitor for Node.js.<br/>Zero dependencies. Crystal Studio Labs.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Package</h4>
+        <ul>
+          <li><a href="https://www.npmjs.com/package/@crystal-studio-labs/crystalsystem.js" target="_blank">npm Registry</a></li>
+          <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js" target="_blank">GitHub Repo</a></li>
+          <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js/releases" target="_blank">Releases</a></li>
+          <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js/issues" target="_blank">Report a Bug</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#docs">Documentation</a></li>
+          <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js-examples" target="_blank">Examples Repo</a></li>
+          <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js/blob/main/LICENSE" target="_blank">MIT License</a></li>
+          <li><a href="https://github.com/Crystal-Studio-Labs/crystalsystem.js/blob/main/CHANGELOG.md" target="_blank">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://discord.gg/4Cf42QEZ7c" target="_blank">Discord Server</a></li>
+          <li><a href="https://github.com/Crystal-Studio-Labs" target="_blank">Crystal Studio Labs</a></li>
+          <li><a href="https://github.com/SahooShuvranshu" target="_blank">SahooShuvranshu</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Crystal Studio Labs · SahooShuvranshu · MIT License</p>
+      <p>crystalsystem.js v1.0.2</p>
+    </div>
+  </div>
 </footer>
 
+<!-- ════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════ -->
 <script>
-// ── Custom cursor ──────────────────────────────────────────────
-const cur  = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-function animCursor() {
-  cur.style.left  = mx + 'px';
-  cur.style.top   = my + 'px';
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  ring.style.left = rx + 'px';
-  ring.style.top  = ry + 'px';
-  requestAnimationFrame(animCursor);
+/* ── Nav toggle ───────────────────────────────── */
+function toggleNav() {
+  const t = document.getElementById('nav-toggle');
+  const d = document.getElementById('nav-drawer');
+  t.classList.toggle('open');
+  d.classList.toggle('open');
 }
-animCursor();
+function closeNav() {
+  document.getElementById('nav-toggle').classList.remove('open');
+  document.getElementById('nav-drawer').classList.remove('open');
+}
 
-document.querySelectorAll('a, button, .feature-card, .alert-card, .install-bar').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cur.style.width = '20px'; cur.style.height = '20px';
-    ring.style.width = '50px'; ring.style.height = '50px';
-  });
-  el.addEventListener('mouseleave', () => {
-    cur.style.width = '10px'; cur.style.height = '10px';
-    ring.style.width = '36px'; ring.style.height = '36px';
-  });
+/* ── Badge ticker ─────────────────────────────── */
+const BADGES = [
+  ['⚡','Zero Dependencies'], ['📡','Event Emitter API'], ['🌐','HTTP JSON API'],
+  ['📊','Live Sparklines'], ['🔔','Threshold Alerts'], ['🖥️','CLI Binary'],
+  ['📘','TypeScript Ready'], ['🤖','Android/Termux'], ['🔝','Top Processes'],
+  ['📝','File Logging'], ['🍎','macOS'], ['🐧','Linux'], ['🪟','Windows'],
+  ['🔋','Battery Monitor'], ['🎮','GPU Detection'], ['⚡','Node 14+'],
+];
+const track = document.getElementById('badge-track');
+const doubled = [...BADGES, ...BADGES];
+doubled.forEach(([icon, text]) => {
+  const el = document.createElement('div');
+  el.className = 'badge-item';
+  el.innerHTML = `<span class="badge-icon">${icon}</span><span class="badge-text">${text}</span>`;
+  track.appendChild(el);
 });
 
-// ── Terminal animation ─────────────────────────────────────────
-const LINES = [
-  { cls:'t-border',  txt:'════════════════════════════════════════════════' },
-  { cls:'t-header',  txt:'█  CRYSTAL SYSTEM.JS v1.0.0  SYSTEM INFO  █' },
-  { cls:'t-border',  txt:'════════════════════════════════════════════════' },
-  { cls:'',          txt:'' },
-  { cls:'t-label',   txt:'┌─ PLATFORM ──────────────────────────────────┐' },
-  { cls:'t-value',   txt:'│ OS       Android 14 (aarch64)               │' },
-  { cls:'t-value',   txt:'│ Hostname crystaldev                          │' },
-  { cls:'t-value',   txt:'│ Uptime   4h 12m 33s                         │' },
-  { cls:'t-label',   txt:'└─────────────────────────────────────────────┘' },
-  { cls:'',          txt:'' },
-  { cls:'t-label',   txt:'┌─ CPU ───────────────────────────────────────┐' },
-  { cls:'t-value',   txt:'│ Model    Snapdragon 8 Gen 2                 │' },
-  { cls:'t-value',   txt:'│ Cores    8 threads                          │' },
-  { cls:'t-green',   txt:'│ Usage    ████████░░░░░░░░░░ 42%  ▂▃▄▅▆▄▃  │' },
-  { cls:'t-label',   txt:'└─────────────────────────────────────────────┘' },
-  { cls:'',          txt:'' },
-  { cls:'t-label',   txt:'┌─ MEMORY ────────────────────────────────────┐' },
-  { cls:'t-value',   txt:'│ Total    8 GB                               │' },
-  { cls:'t-value',   txt:'│ Used     3.4 GB (42.50%)                    │' },
-  { cls:'t-yellow',  txt:'│ Usage    ████████████░░░░░░ 58%  ▄▄▅▅▆▅▄▄  │' },
-  { cls:'t-label',   txt:'└─────────────────────────────────────────────┘' },
-  { cls:'',          txt:'' },
-  { cls:'t-label',   txt:'┌─ NETWORK ───────────────────────────────────┐' },
-  { cls:'t-value',   txt:'│ Speed ↓  1.4 MB/s     Total ↓  24.6 GB    │' },
-  { cls:'t-value',   txt:'│ Speed ↑  220 KB/s     Total ↑  8.2 GB     │' },
-  { cls:'t-label',   txt:'└─────────────────────────────────────────────┘' },
+/* ── Terminal animation ───────────────────────── */
+const TERM = [
+  ['tc-dim',  '══════════════════════════════════════════════════════'],
+  ['tc-red',  '█  CRYSTAL SYSTEM.JS v1.0.2    SYSTEM INFORMATION  █'],
+  ['tc-dim',  '══════════════════════════════════════════════════════'],
+  ['',        ''],
+  ['tc-blue', '┌─ PLATFORM ─────────────────────────────────────────┐'],
+  ['tc-wht',  '│ OS        Android 14 (aarch64)                     │'],
+  ['tc-wht',  '│ Hostname  crystaldev · Node v20.11.0               │'],
+  ['tc-wht',  '│ Uptime    6h 22m 18s                               │'],
+  ['tc-blue', '└────────────────────────────────────────────────────┘'],
+  ['',        ''],
+  ['tc-blue', '┌─ CPU ──────────────────────────────────────────────┐'],
+  ['tc-wht',  '│ Model     Snapdragon 8 Gen 2 (8 threads)          │'],
+  ['tc-grn',  '│ Usage     ████████░░░░░░░░░░░░ 38%                │'],
+  ['tc-grn',  '│ Graph     ▂▃▄▅▆▄▃▂▄▅▃▂▃▄▅▆▄▃                     │'],
+  ['tc-wht',  '│ Load Avg  0.44 / 0.58 / 0.51                      │'],
+  ['tc-blue', '└────────────────────────────────────────────────────┘'],
+  ['',        ''],
+  ['tc-blue', '┌─ MEMORY ───────────────────────────────────────────┐'],
+  ['tc-wht',  '│ Total     8 GB    Used  3.4 GB (42.50%)           │'],
+  ['tc-ylw',  '│ Usage     ████████████░░░░░░░░ 56%                │'],
+  ['tc-grn',  '│ Graph     ▃▃▄▄▅▄▃▃▄▄▅▅▄▃▃▄                        │'],
+  ['tc-blue', '└────────────────────────────────────────────────────┘'],
+  ['',        ''],
+  ['tc-blue', '┌─ NETWORK ──────────────────────────────────────────┐'],
+  ['tc-wht',  '│ Speed ↓   1.4 MB/s          Total ↓   26.4 GB    │'],
+  ['tc-wht',  '│ Speed ↑   220 KB/s          Total ↑   8.8 GB     │'],
+  ['tc-blue', '└────────────────────────────────────────────────────┘'],
+  ['',        ''],
+  ['tc-blue', '┌─ TOP PROCESSES ────────────────────────────────────┐'],
+  ['tc-mgn',  '│ [1842] com.android.chrome   CPU: 4.2%  MEM: 8.1% │'],
+  ['tc-mgn',  '│ [2210] node                 CPU: 2.1%  MEM: 3.4% │'],
+  ['tc-blue', '└────────────────────────────────────────────────────┘'],
 ];
 
-const tbody = document.getElementById('terminal-body');
-
-function renderTerminal() {
-  tbody.innerHTML = '';
-  LINES.forEach((l, i) => {
-    const span = document.createElement('span');
-    span.className = 't-line ' + (l.cls || '');
-    span.textContent = l.txt || ' ';
-    span.style.animationDelay = (i * 40) + 'ms';
-    tbody.appendChild(span);
+function renderTerm() {
+  const body = document.getElementById('tbody');
+  body.innerHTML = '';
+  TERM.forEach(([cls, txt], i) => {
+    const s = document.createElement('span');
+    s.className = 'tl ' + (cls || '');
+    s.textContent = txt || ' ';
+    s.style.animationDelay = (i * 38) + 'ms';
+    body.appendChild(s);
   });
-
-  // Blinking cursor at end
+  // Cursor
   const cur = document.createElement('span');
-  cur.className = 't-line';
-  cur.style.animationDelay = (LINES.length * 40 + 100) + 'ms';
+  cur.className = 'tl';
+  cur.style.animationDelay = (TERM.length * 38 + 80) + 'ms';
   const c = document.createElement('span');
-  c.className = 't-cursor';
+  c.className = 't-caret';
   cur.appendChild(c);
-  tbody.appendChild(cur);
+  body.appendChild(cur);
+}
+renderTerm();
+setInterval(renderTerm, 9000);
+
+/* ── Code tabs ────────────────────────────────── */
+function tab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(id).classList.add('on');
 }
 
-renderTerminal();
-// Re-animate every 8 seconds
-setInterval(() => { renderTerminal(); }, 8000);
-
-// ── Code tabs ─────────────────────────────────────────────────
-function switchTab(btn, panelId) {
-  document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(panelId).classList.add('active');
-}
-
-// ── Copy code ─────────────────────────────────────────────────
-function copyCode(btn) {
-  const pre = btn.nextElementSibling;
+/* ── Copy code ────────────────────────────────── */
+function cpCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
   navigator.clipboard.writeText(pre.innerText).then(() => {
     btn.textContent = 'copied!';
     setTimeout(() => btn.textContent = 'copy', 2000);
   });
 }
 
-// ── Copy install ──────────────────────────────────────────────
+/* ── Copy install ─────────────────────────────── */
 function copyInstall(el) {
   navigator.clipboard.writeText('npm install @crystal-studio-labs/crystalsystem.js').then(() => {
-    const lbl = document.getElementById('copy-install-label');
+    const lbl = document.getElementById('ilbl');
     lbl.textContent = 'copied!';
     setTimeout(() => lbl.textContent = 'copy', 2000);
   });
 }
 
-// ── Scroll reveal ─────────────────────────────────────────────
-const io = new IntersectionObserver((entries) => {
+/* ── Scroll reveal ────────────────────────────── */
+const revealIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealIO.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
+
+/* ── Docs sidebar active ──────────────────────── */
+const docSections = document.querySelectorAll('.doc-section');
+const docLinks    = document.querySelectorAll('.docs-nav-list a');
+const docIO = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      io.unobserve(e.target);
+      docLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.docs-nav-list a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
     }
   });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}, { rootMargin: '-30% 0px -60% 0px' });
+docSections.forEach(s => docIO.observe(s));
 </script>
 </body>
 </html>
