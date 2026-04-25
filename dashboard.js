@@ -90,9 +90,9 @@ const DASHBOARD_HTML = `<!DOCTYPE html>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --red:#FF2222;--red2:#cc1a1a;--red-g:rgba(255,34,34,.12);--red-f:rgba(255,34,34,.05);
-  --bg:#070707;--bg1:#0d0d0d;--bg2:#121212;--bg3:#181818;
-  --line:rgba(255,255,255,.06);--line-r:rgba(255,34,34,.15);
-  --txt:#e4e4e4;--txt2:#888;--txt3:#444;
+  --bg:#070707;--bg1:#0d0d0d;--bg2:#121212;--bg3:#1a1a1a;
+  --line:rgba(255,255,255,.07);--line-r:rgba(255,34,34,.18);
+  --txt:#eeeeee;--txt2:#999;--txt3:#555;
   --grn:#22cc66;--ylw:#ffcc22;--blu:#22aaff;--mgn:#cc66ff;
   --mono:'Share Tech Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
 }
@@ -110,28 +110,27 @@ body::after{content:'';position:fixed;inset:0;z-index:8999;pointer-events:none;
 /* ── TOPBAR ── */
 #topbar{
   position:sticky;top:0;z-index:100;
-  height:52px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;
-  background:rgba(7,7,7,.95);backdrop-filter:blur(16px);
+  height:60px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:rgba(7,7,7,.96);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--line);
 }
-.tb-logo{font-family:var(--mono);font-size:13px;color:var(--red)}
+.tb-logo{font-family:var(--mono);font-size:16px;color:var(--red);letter-spacing:.03em}
 .tb-logo span{color:var(--txt3)}
-.tb-right{display:flex;align-items:center;gap:20px}
-.tb-stat{font-family:var(--mono);font-size:11px;color:var(--txt3);display:flex;align-items:center;gap:6px}
+.tb-right{display:flex;align-items:center;gap:24px}
+.tb-stat{font-family:var(--mono);font-size:13px;color:var(--txt3);display:flex;align-items:center;gap:7px}
 .tb-stat strong{color:var(--txt)}
-#ws-dot{width:7px;height:7px;border-radius:50%;background:#333;transition:background .3s}
-#ws-dot.on{background:var(--grn);box-shadow:0 0 6px var(--grn)}
+#ws-dot{width:9px;height:9px;border-radius:50%;background:#333;transition:background .3s;flex-shrink:0}
+#ws-dot.on{background:var(--grn);box-shadow:0 0 8px var(--grn)}
 #ws-dot.err{background:var(--red)}
 
 /* ── LAYOUT ── */
 #app{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
-  grid-template-rows:auto;
-  gap:10px;
-  padding:12px;
-  max-width:1400px;
+  gap:14px;
+  padding:16px;
+  max-width:1500px;
   margin:0 auto;
 }
 
@@ -139,7 +138,7 @@ body::after{content:'';position:fixed;inset:0;z-index:8999;pointer-events:none;
 .card{
   background:var(--bg1);
   border:1px solid var(--line);
-  padding:20px;
+  padding:28px;
   position:relative;
   overflow:hidden;
   transition:border-color .2s;
@@ -156,141 +155,139 @@ body::after{content:'';position:fixed;inset:0;z-index:8999;pointer-events:none;
 .span3{grid-column:span 3}
 
 .card-label{
-  font-family:var(--mono);font-size:9px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--txt3);margin-bottom:14px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--txt3);margin-bottom:18px;
   display:flex;align-items:center;justify-content:space-between;
 }
-.card-label .icon{font-size:14px}
+.card-label .icon{font-size:16px}
 
 .card-value{
-  font-family:var(--disp);font-size:clamp(28px,4vw,44px);
+  font-family:var(--disp);font-size:clamp(32px,4vw,52px);
   font-weight:800;letter-spacing:-.03em;line-height:1;
-  margin-bottom:6px;
+  margin-bottom:8px;
 }
-.card-sub{font-family:var(--mono);font-size:11px;color:var(--txt2)}
+.card-sub{font-family:var(--mono);font-size:13px;color:var(--txt2)}
 
 /* ── GAUGE ── */
-.gauge-wrap{position:relative;width:120px;height:120px;margin:8px auto 12px}
+.gauge-wrap{position:relative;width:160px;height:160px;margin:10px auto 16px}
 .gauge-svg{width:100%;height:100%;transform:rotate(-90deg)}
-.gauge-bg{fill:none;stroke:var(--bg3);stroke-width:8}
-.gauge-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1),stroke .3s}
+.gauge-bg{fill:none;stroke:var(--bg3);stroke-width:10}
+.gauge-fill{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1),stroke .3s}
 .gauge-text{
   position:absolute;inset:0;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  font-family:var(--disp);font-weight:800;font-size:22px;letter-spacing:-.02em;
+  font-family:var(--disp);font-weight:800;font-size:30px;letter-spacing:-.02em;
 }
-.gauge-text small{font-family:var(--mono);font-size:9px;color:var(--txt3);letter-spacing:.15em;margin-top:2px}
+.gauge-text small{font-family:var(--mono);font-size:11px;color:var(--txt3);letter-spacing:.18em;margin-top:4px}
 
 /* ── BAR ── */
-.bar-wrap{margin:10px 0 4px}
+.bar-wrap{margin:14px 0 6px}
 .bar-track{
-  height:6px;background:var(--bg3);border-radius:0;overflow:hidden;
-  position:relative;
+  height:8px;background:var(--bg3);border-radius:0;overflow:hidden;
 }
 .bar-fill{
   height:100%;border-radius:0;
   transition:width .6s cubic-bezier(.4,0,.2,1),background .3s;
 }
-.bar-labels{display:flex;justify-content:space-between;margin-top:5px}
-.bar-labels span{font-family:var(--mono);font-size:10px;color:var(--txt3)}
-.bar-labels strong{font-family:var(--mono);font-size:10px;color:var(--txt)}
+.bar-labels{display:flex;justify-content:space-between;margin-top:7px}
+.bar-labels span{font-family:var(--mono);font-size:12px;color:var(--txt3)}
+.bar-labels strong{font-family:var(--mono);font-size:12px;color:var(--txt)}
 
 /* ── CHART ── */
-.chart-wrap{position:relative;height:70px;margin-top:10px}
+.chart-wrap{position:relative;height:90px;margin-top:14px}
 canvas.chart{width:100%;height:100%;display:block}
 
 /* ── STAT ROW ── */
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
 .stat-row:last-child{border-bottom:none}
-.stat-key{font-family:var(--mono);font-size:11px;color:var(--txt2)}
-.stat-val{font-family:var(--mono);font-size:11px;color:var(--txt);text-align:right}
+.stat-key{font-family:var(--mono);font-size:13px;color:var(--txt2)}
+.stat-val{font-family:var(--mono);font-size:13px;color:var(--txt);text-align:right}
 .stat-val.red{color:var(--red)}
 .stat-val.grn{color:var(--grn)}
 .stat-val.ylw{color:var(--ylw)}
 .stat-val.blu{color:var(--blu)}
 
 /* ── PROCESS TABLE ── */
-.proc-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.proc-table{width:100%;border-collapse:collapse;margin-top:10px}
 .proc-table th{
-  font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--txt3);text-align:left;padding:6px 8px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--txt3);text-align:left;padding:10px 12px;
   border-bottom:1px solid var(--line-r);
 }
 .proc-table td{
-  padding:7px 8px;color:var(--txt2);border-bottom:1px solid var(--line);
-  font-family:var(--mono);font-size:11px;
+  padding:10px 12px;color:var(--txt2);border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:13px;
   transition:background .15s;
 }
 .proc-table tr:hover td{background:var(--bg2)}
-.proc-table td:first-child{color:var(--txt3);font-size:10px}
-.proc-table td:nth-child(2){color:var(--txt);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.proc-table td:first-child{color:var(--txt3);font-size:12px}
+.proc-table td:nth-child(2){color:var(--txt);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .proc-table td.cpu-val{color:var(--ylw)}
 .proc-table td.mem-val{color:var(--blu)}
 
 /* ── ALERT LOG ── */
-.alert-list{margin-top:8px;display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto}
-.alert-list::-webkit-scrollbar{width:3px}
+.alert-list{margin-top:10px;display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto}
+.alert-list::-webkit-scrollbar{width:4px}
 .alert-list::-webkit-scrollbar-track{background:transparent}
 .alert-list::-webkit-scrollbar-thumb{background:var(--line-r)}
 .alert-item{
   background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--red);
-  padding:8px 12px;display:flex;gap:10px;align-items:flex-start;
+  padding:12px 16px;display:flex;gap:14px;align-items:flex-start;
 }
 .alert-item.grn{border-left-color:var(--grn)}
 .alert-item.ylw{border-left-color:var(--ylw)}
-.alert-time{font-family:var(--mono);font-size:9px;color:var(--txt3);flex-shrink:0;margin-top:2px}
-.alert-msg{font-family:var(--mono);font-size:11px;color:var(--txt2)}
-.alert-msg strong{color:var(--txt);display:block;margin-bottom:2px}
-.alert-empty{font-family:var(--mono);font-size:11px;color:var(--txt3);text-align:center;padding:24px 0}
+.alert-time{font-family:var(--mono);font-size:11px;color:var(--txt3);flex-shrink:0;margin-top:2px}
+.alert-msg{font-family:var(--mono);font-size:13px;color:var(--txt2)}
+.alert-msg strong{color:var(--txt);display:block;margin-bottom:3px;font-size:13px}
+.alert-empty{font-family:var(--mono);font-size:13px;color:var(--txt3);text-align:center;padding:32px 0}
 
 /* ── PLATFORM CARD ── */
 .platform-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;
 }
-.plat-item{background:var(--bg2);border:1px solid var(--line);padding:10px 12px}
-.plat-key{font-family:var(--mono);font-size:9px;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
-.plat-val{font-family:var(--mono);font-size:12px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plat-item{background:var(--bg2);border:1px solid var(--line);padding:14px 16px}
+.plat-key{font-family:var(--mono);font-size:10px;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.plat-val{font-family:var(--mono);font-size:14px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── NET SPEED ── */
-.net-speeds{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.net-speeds{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
 .net-speed-item{text-align:center}
-.net-speed-arrow{font-size:18px;margin-bottom:4px}
-.net-speed-val{font-family:var(--disp);font-size:20px;font-weight:800;letter-spacing:-.02em}
-.net-speed-label{font-family:var(--mono);font-size:9px;color:var(--txt3);letter-spacing:.15em;text-transform:uppercase;margin-top:3px}
+.net-speed-arrow{font-size:22px;margin-bottom:6px}
+.net-speed-val{font-family:var(--disp);font-size:clamp(20px,2.5vw,32px);font-weight:800;letter-spacing:-.02em}
+.net-speed-label{font-family:var(--mono);font-size:11px;color:var(--txt3);letter-spacing:.15em;text-transform:uppercase;margin-top:5px}
 
 /* ── BATTERY ── */
 .batt-body{
-  width:60px;height:28px;border:2px solid var(--txt3);border-radius:4px;
-  position:relative;margin:12px auto 8px;
+  width:80px;height:36px;border:2px solid var(--txt3);border-radius:5px;
+  position:relative;margin:16px auto 10px;
 }
 .batt-body::after{
-  content:'';position:absolute;right:-7px;top:50%;transform:translateY(-50%);
-  width:5px;height:12px;background:var(--txt3);border-radius:0 2px 2px 0;
+  content:'';position:absolute;right:-9px;top:50%;transform:translateY(-50%);
+  width:7px;height:16px;background:var(--txt3);border-radius:0 3px 3px 0;
 }
 .batt-fill{
-  position:absolute;left:2px;top:2px;bottom:2px;border-radius:2px;
+  position:absolute;left:3px;top:3px;bottom:3px;border-radius:3px;
   transition:width .6s,background .3s;
 }
-.batt-pct{font-family:var(--disp);font-size:28px;font-weight:800;text-align:center;margin-top:4px}
-.batt-status{font-family:var(--mono);font-size:10px;color:var(--txt3);text-align:center;letter-spacing:.1em;text-transform:uppercase}
+.batt-pct{font-family:var(--disp);font-size:36px;font-weight:800;text-align:center;margin-top:6px}
+.batt-status{font-family:var(--mono);font-size:12px;color:var(--txt3);text-align:center;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
 
 /* ── UPTIME TICKER ── */
-#uptime-val{font-family:var(--mono);font-size:clamp(18px,2.5vw,28px);color:var(--grn)}
+#uptime-val{font-family:var(--mono);font-size:clamp(20px,2.8vw,34px);color:var(--grn)}
 
 /* ── REFRESH BADGE ── */
 .refresh-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  font-family:var(--mono);font-size:9px;color:var(--txt3);
-  padding:3px 8px;background:var(--bg3);border:1px solid var(--line);
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:11px;color:var(--txt3);
+  padding:5px 12px;background:var(--bg3);border:1px solid var(--line);
 }
-.refresh-dot{width:5px;height:5px;border-radius:50%;background:var(--grn);animation:pulse 1.4s ease-in-out infinite}
+.refresh-dot{width:7px;height:7px;border-radius:50%;background:var(--grn);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 
 /* ── ANIMATIONS ── */
 .card{animation:cardIn .5s cubic-bezier(.25,.46,.45,.94) both}
-@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
-/* Stagger cards */
 .card:nth-child(1){animation-delay:.05s}
 .card:nth-child(2){animation-delay:.1s}
 .card:nth-child(3){animation-delay:.15s}
@@ -305,8 +302,8 @@ canvas.chart{width:100%;height:100%;display:block}
 
 /* ── FOOTER ── */
 #footer{
-  text-align:center;padding:20px;
-  font-family:var(--mono);font-size:10px;color:var(--txt3);
+  text-align:center;padding:28px;
+  font-family:var(--mono);font-size:12px;color:var(--txt3);
   border-top:1px solid var(--line);letter-spacing:.08em;
 }
 #footer a{color:var(--red);text-decoration:none}
@@ -317,14 +314,16 @@ canvas.chart{width:100%;height:100%;display:block}
   #app{grid-template-columns:1fr 1fr}
   .span3{grid-column:span 2}
 }
-@media(max-width:700px){
-  #app{grid-template-columns:1fr;padding:8px;gap:8px}
+@media(max-width:720px){
+  #app{grid-template-columns:1fr;padding:10px;gap:10px}
   .span2,.span3{grid-column:span 1}
-  #topbar{padding:0 14px}
+  #topbar{padding:0 16px;height:56px}
+  .tb-stat:not(:first-child){display:none}
   .platform-grid{grid-template-columns:1fr}
   .net-speeds{grid-template-columns:1fr 1fr}
-}
-</style>
+  .card{padding:20px}
+  .gauge-wrap{width:140px;height:140px}
+}</style>
 </head>
 <body>
 
@@ -345,10 +344,10 @@ canvas.chart{width:100%;height:100%;display:block}
   <div class="card" id="card-cpu">
     <div class="card-label"><span>⚙️ CPU Usage</span><span class="icon" id="cpu-model-short"></span></div>
     <div class="gauge-wrap">
-      <svg class="gauge-svg" viewBox="0 0 120 120">
-        <circle class="gauge-bg" cx="60" cy="60" r="52"/>
-        <circle class="gauge-fill" id="cpu-gauge-fill" cx="60" cy="60" r="52"
-          stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke="var(--grn)"/>
+      <svg class="gauge-svg" viewBox="0 0 160 160">
+        <circle class="gauge-bg" cx="80" cy="80" r="68"/>
+        <circle class="gauge-fill" id="cpu-gauge-fill" cx="80" cy="80" r="68"
+          stroke-dasharray="427.3" stroke-dashoffset="427.3" stroke="var(--grn)"/>
       </svg>
       <div class="gauge-text"><span id="cpu-pct">0%</span><small>CPU</small></div>
     </div>
@@ -363,10 +362,10 @@ canvas.chart{width:100%;height:100%;display:block}
   <div class="card" id="card-mem">
     <div class="card-label"><span>🧠 Memory</span></div>
     <div class="gauge-wrap">
-      <svg class="gauge-svg" viewBox="0 0 120 120">
-        <circle class="gauge-bg" cx="60" cy="60" r="52"/>
-        <circle class="gauge-fill" id="mem-gauge-fill" cx="60" cy="60" r="52"
-          stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke="var(--blu)"/>
+      <svg class="gauge-svg" viewBox="0 0 160 160">
+        <circle class="gauge-bg" cx="80" cy="80" r="68"/>
+        <circle class="gauge-fill" id="mem-gauge-fill" cx="80" cy="80" r="68"
+          stroke-dasharray="427.3" stroke-dashoffset="427.3" stroke="var(--blu)"/>
       </svg>
       <div class="gauge-text"><span id="mem-pct">0%</span><small>RAM</small></div>
     </div>
@@ -388,7 +387,7 @@ canvas.chart{width:100%;height:100%;display:block}
       <div class="plat-item"><div class="plat-key">Heap Used</div><div class="plat-val" id="plat-heap">—</div></div>
     </div>
     <div style="margin-top:14px">
-      <div class="plat-key" style="margin-bottom:6px">System Uptime</div>
+      <div class="plat-key" style="margin-bottom:8px">System Uptime</div>
       <div id="uptime-val">—</div>
     </div>
   </div>
@@ -401,13 +400,13 @@ canvas.chart{width:100%;height:100%;display:block}
         <div class="net-speed-arrow" style="color:var(--grn)">↓</div>
         <div class="net-speed-val" id="net-rx" style="color:var(--grn)">0 B/s</div>
         <div class="net-speed-label">Download</div>
-        <div class="stat-val grn" style="margin-top:6px;font-family:var(--mono);font-size:11px" id="net-rx-total">—</div>
+        <div class="stat-val grn" style="margin-top:8px;font-family:var(--mono);font-size:13px" id="net-rx-total">—</div>
       </div>
       <div class="net-speed-item">
         <div class="net-speed-arrow" style="color:var(--blu)">↑</div>
         <div class="net-speed-val" id="net-tx" style="color:var(--blu)">0 B/s</div>
         <div class="net-speed-label">Upload</div>
-        <div class="stat-val blu" style="margin-top:6px;font-family:var(--mono);font-size:11px" id="net-tx-total">—</div>
+        <div class="stat-val blu" style="margin-top:8px;font-family:var(--mono);font-size:13px" id="net-tx-total">—</div>
       </div>
     </div>
     <div class="chart-wrap" style="height:80px;margin-top:14px"><canvas id="net-chart" class="chart"></canvas></div>
@@ -471,7 +470,7 @@ canvas.chart{width:100%;height:100%;display:block}
   <div class="card span3" id="card-alerts">
     <div class="card-label">
       <span>🔔 Alert Log</span>
-      <button onclick="clearAlerts()" style="font-family:var(--mono);font-size:9px;background:none;border:1px solid var(--line);color:var(--txt3);padding:3px 8px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase">clear</button>
+      <button onclick="clearAlerts()" style="font-family:var(--mono);font-size:11px;background:none;border:1px solid var(--line);color:var(--txt3);padding:5px 12px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase">clear</button>
     </div>
     <div class="alert-list" id="alert-list">
       <div class="alert-empty">No alerts yet. Thresholds will appear here.</div>
@@ -550,7 +549,7 @@ window.addEventListener('resize', () => {
 });
 
 // ── Gauge updater ─────────────────────────────────────────────────
-const CIRC = 326.7;
+const CIRC = 427.3;  // 2 * π * 68
 
 function setGauge(id, pct) {
   const el = document.getElementById(id);
@@ -923,3 +922,4 @@ function buildSnapshot() {
 }
 
 module.exports = { createDashboardServer };
+
