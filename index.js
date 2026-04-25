@@ -1,5 +1,5 @@
 //=================================================================
-// CRYSTAL SYSTEM.JS v1.0.3
+// CRYSTAL SYSTEM.JS v1.0.0 — EPIC EDITION
 // Advanced Cross-Platform System Monitor
 // Developed by Crystal Studio Labs
 // Author: SahooShuvranshu
@@ -424,7 +424,7 @@ function buildSystemTable(options = {}) {
   // ── Header ──
   const border = '═'.repeat(W);
   out += cc(border, 'blue') + '\n';
-  const title = '  CRYSTAL SYSTEM.JS v1.0.3  ';
+  const title = '  CRYSTAL SYSTEM.JS v1.0.0  ';
   const sub   = '  Crystal Studio Labs  ';
   out += cc('█', 'blue') + ' ' + cc(title, 'bgBlue') + cc(sub, 'bgCyan') + ' ' + cc('█', 'blue') + '\n';
   out += cc(border, 'blue') + '\n\n';
@@ -613,12 +613,16 @@ class CrystalSystem extends EventEmitter {
       showProcesses: true,
       logFile: null,
       httpPort: null,
+      dashboard: false,
+      dashboardPort: 4000,
+      dashboardOpenBrowser: true,
       thresholds: { ...DEFAULT_THRESHOLDS },
       historySize: 30,
       ...options,
     };
     this._timer = null;
     this._httpServer = null;
+    this._dashboardServer = null;
     this._logger = null;
     this._cpuHistory = [];
     this._memHistory = [];
@@ -680,6 +684,30 @@ class CrystalSystem extends EventEmitter {
       this._httpServer = startHttpServer(this.options.httpPort, this.options);
     }
 
+    // Web dashboard mode — skip terminal output
+    if (this.options.dashboard) {
+      const { createDashboardServer } = require('./dashboard.js');
+      this._dashboardServer = createDashboardServer({
+        port:        this.options.dashboardPort,
+        interval:    this.options.interval,
+        thresholds:  this.options.thresholds,
+        openBrowser: this.options.dashboardOpenBrowser,
+        onStats: (stats) => {
+          this.emit('data', stats);
+          // Check thresholds and emit alerts
+          const cpu  = stats.cpu?.loadRaw || 0;
+          const mem  = stats.memory?.usedPercent || 0;
+          const disk = stats.disk?.usedPercent || 0;
+          const { thresholds } = this.options;
+          if (cpu  > thresholds.cpu)    this.emit('alert', { type: 'cpu',    message: `CPU usage critical: ${cpu.toFixed(1)}%`,    value: cpu,  threshold: thresholds.cpu });
+          if (mem  > thresholds.memory) this.emit('alert', { type: 'memory', message: `Memory usage high: ${mem.toFixed(1)}%`,      value: mem,  threshold: thresholds.memory });
+          if (disk > thresholds.disk)   this.emit('alert', { type: 'disk',   message: `Disk usage critical: ${disk.toFixed(1)}%`,   value: disk, threshold: thresholds.disk });
+          if (this._logger) this._logger.write(stats);
+        },
+      });
+      return this;
+    }
+
     this.display();
 
     if (this.options.interval > 0) {
@@ -693,6 +721,7 @@ class CrystalSystem extends EventEmitter {
   stop() {
     if (this._timer) { clearInterval(this._timer); this._timer = null; }
     if (this._httpServer) { this._httpServer.close(); this._httpServer = null; }
+    if (this._dashboardServer) { this._dashboardServer.stop(); this._dashboardServer = null; }
     this._running = false;
     this.emit('stop');
     return this;
@@ -733,6 +762,7 @@ module.exports = {
   createLogger,
   formatBytes,
   sparkline,
+  createDashboardServer: (...args) => require('./dashboard.js').createDashboardServer(...args),
 };
 
 // Auto-run if executed directly
@@ -741,8 +771,7 @@ if (require.main === module) {
 }
 
 //=================================================================
-// CRYSTAL SYSTEM.JS v1.0.3
+// CRYSTAL SYSTEM.JS v1.1.0-alpha.1 — WEB DASHBOARD EDITION
 // Crystal Studio Labs | Author: SahooShuvranshu
 // https://github.com/Crystal-Studio-Labs/crystalsystem.js
 //=================================================================
-

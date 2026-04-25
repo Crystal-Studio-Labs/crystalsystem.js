@@ -1,39 +1,23 @@
 {
   "name": "@crystal-studio-labs/crystalsystem.js",
-  "version": "1.0.3",
-  "description": "Real-time system resource monitor for Node.js with alerts, HTTP API, CLI, and zero dependencies.",
+  "version": "1.1.0-alpha.1",
+  "description": "Real-time system monitor for Node.js — terminal dashboard, live web dashboard, alerts, HTTP API, CLI. Zero dependencies.",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
-    "crystalsystem": "cli.js"
+    "crystalsystem": "./cli.js"
   },
   "scripts": {
-    "start": "node index.js",
-    "test": "node test.js"
+    "start":     "node index.js",
+    "dashboard": "node cli.js --dashboard",
+    "test":      "node test.js"
   },
   "keywords": [
-    "system",
-    "monitor",
-    "stats",
-    "cpu",
-    "memory",
-    "disk",
-    "network",
-    "battery",
-    "gpu",
-    "sparkline",
-    "alert",
-    "http",
-    "api",
-    "cli",
-    "real-time",
-    "cross-platform",
-    "typescript",
-    "termux",
-    "android",
-    "linux",
-    "event-emitter",
-    "logger"
+    "system", "monitor", "dashboard", "web-dashboard",
+    "cpu", "memory", "disk", "network", "battery", "gpu",
+    "real-time", "websocket", "terminal", "cli",
+    "cross-platform", "typescript", "termux", "android",
+    "linux", "event-emitter", "logger", "alerts", "zero-deps"
   ],
   "author": {
     "name": "SahooShuvranshu",
@@ -46,17 +30,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Crystal-Studio-Labs/crystalsystem.js.git"
+    "url": "https://github.com/Crystal-Studio-Labs/crystalsystem.js"
   },
   "bugs": {
     "url": "https://github.com/Crystal-Studio-Labs/crystalsystem.js/issues"
   },
-  "homepage": "https://crystal-studio-labs.github.io/crystalsystem.js",
+  "homepage": "https://crystal-studio-labs.github.io/crystalsystem.js/",
   "engines": {
     "node": ">=14.0.0"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {}
 }
+
